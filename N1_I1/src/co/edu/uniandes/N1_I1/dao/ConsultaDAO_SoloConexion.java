@@ -33,7 +33,7 @@ public class ConsultaDAO_SoloConexion {
 	/**
 	 * ruta donde se encuentra el archivo de conexión.
 	 */
-	private static final String ARCHIVO_CONEXION = "/../conexion.properties";
+	private static final String ARCHIVO_CONEXION = "WebContent/conexion.properties";
 	
 	/**
 	 * nombre de la tabla videos
@@ -102,11 +102,12 @@ public class ConsultaDAO_SoloConexion {
 	 * Los datos se obtienen a partir de un archivo properties.
 	 * @param path ruta donde se encuentra el archivo properties.
 	 */
-	public void inicializar(String path)
+	//public void inicializar(String path)
+	public void inicializar()
 	{
 		try
 		{
-			File arch= new File(path+ARCHIVO_CONEXION);
+			File arch= new File(ARCHIVO_CONEXION);
 			Properties prop = new Properties();
 			FileInputStream in = new FileInputStream( arch );
 
@@ -224,7 +225,7 @@ public class ConsultaDAO_SoloConexion {
 
     	try {
     		establecerConexion(cadenaConexion, usuario, clave);
-    		prepStmt = conexion.prepareStatement("SELECT * FROM USUARIO");
+    		prepStmt = conexion.prepareStatement("SELECT * USUARIO");
 
     		ResultSet rs = prepStmt.executeQuery();
 
@@ -255,7 +256,7 @@ public class ConsultaDAO_SoloConexion {
 
     public static void main(String[] args) {
     	ConsultaDAO_SoloConexion c = new ConsultaDAO_SoloConexion();
-    	c.inicializar("C:/Users/Jairo Bautista/Desktop/N1_I1/WebContent/conexion.properties");
+    	c.inicializar();
     	try {
 			c.metodo1();
 		} catch (Exception e) {
