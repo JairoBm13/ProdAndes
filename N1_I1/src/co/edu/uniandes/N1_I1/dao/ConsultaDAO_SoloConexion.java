@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
+
 
 
 
@@ -465,7 +467,43 @@ public class ConsultaDAO_SoloConexion {
     	try {
     		establecerConexion(cadenaConexion, usuario, clave);
     		
-    		prepStmt = conexion.prepareStatement("SELECT * from Producto where Producto.codigo="+idProducto+" and etapa=0");
+    		
+    		String sentencia ="SELECT * from Producto where Producto.codigo="+idProducto+" and etapa=0";
+    		
+    		if(costo!=null)
+    			sentencia = sentencia + " and costo between "+costo[0]+" and "+costo[1];
+    		
+    		Iterator<String> iteraGrupos = grupos.iterator();
+    		String agrupamiento = "";
+    		while(iteraGrupos.hasNext()){
+    			String grupo = iteraGrupos.next();
+    			if (iteraGrupos.hasNext()) {
+    				agrupamiento += grupo + ", ";
+    			}
+    			else{
+    				agrupamiento += grupo;
+    			}
+    		}
+    		if(!agrupamiento.isEmpty()){
+    			sentencia += "group by "+agrupamiento;
+    		}
+    		Iterator<String> iteraOrdenes= ordenes.iterator();
+    		String ordenamiento = "";
+    		while(iteraOrdenes.hasNext()){
+    			String orden = iteraOrdenes.next();
+    			if (iteraOrdenes.hasNext()) {
+    				ordenamiento += orden + ",";
+    			}
+    			else{
+    				ordenamiento += orden;
+    			}
+    		}
+    		if(!ordenamiento.isEmpty()){
+    			sentencia += "order by "+ordenamiento;
+    		}
+    		
+    		
+    		prepStmt = conexion.prepareStatement(sentencia);
     		
     		ResultSet rsProducto = prepStmt.executeQuery();
     		
@@ -553,8 +591,44 @@ public class ConsultaDAO_SoloConexion {
     	try {
     		establecerConexion(cadenaConexion, usuario, clave);
     		
+    		String sentencia = "SELECT * from Material where codigo="+idMaterial+"";
+    		if(tipo!=null)
+    			sentencia  = sentencia+" tipo="+tipo;
+    		if(volumen!=null)
+    			sentencia = sentencia + " and cantidad between "+volumen[0]+" and "+volumen[1];
+
+    		Iterator<String> iteraGrupos = grupos.iterator();
+    		String agrupamiento = "";
+    		while(iteraGrupos.hasNext()){
+    			String grupo = iteraGrupos.next();
+    			if (iteraGrupos.hasNext()) {
+    				agrupamiento += grupo + ", ";
+    			}
+    			else{
+    				agrupamiento += grupo;
+    			}
+    		}
+    		if(!agrupamiento.isEmpty()){
+    			sentencia += "group by "+agrupamiento;
+    		}
+    		Iterator<String> iteraOrdenes= ordenes.iterator();
+    		String ordenamiento = "";
+    		while(iteraOrdenes.hasNext()){
+    			String orden = iteraOrdenes.next();
+    			if (iteraOrdenes.hasNext()) {
+    				ordenamiento += orden + ",";
+    			}
+    			else{
+    				ordenamiento += orden;
+    			}
+    		}
+    		if(!ordenamiento.isEmpty()){
+    			sentencia += "order by "+ordenamiento;
+    		}
+
+
     		
-    		prepStmt = conexion.prepareStatement("SELECT * from Material where codigo="+idMaterial+"");
+    		prepStmt = conexion.prepareStatement(sentencia);
     		
     		ResultSet rsMaterial = prepStmt.executeQuery();
     		

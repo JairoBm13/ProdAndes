@@ -263,7 +263,7 @@ public class ConsultaDAO {
 		String[] inven = inventario.split("-");
 		selectingQuery += inven[0] + " AND " + inven[1];
 		}
-		Iterator<String> iteraGrupos = ordenes.iterator();
+		Iterator<String> iteraGrupos = grupos.iterator();
 		String agrupamiento = "";
 		while(iteraGrupos.hasNext()){
 			String grupo = iteraGrupos.next();
@@ -282,10 +282,10 @@ public class ConsultaDAO {
 		while(iteraOrdenes.hasNext()){
 			String orden = iteraOrdenes.next();
 			if (iteraOrdenes.hasNext()) {
-				agrupamiento += orden + ",";
+				ordenamiento += orden + ",";
 			}
 			else{
-				agrupamiento += orden;
+				ordenamiento += orden;
 			}
 		}
 		if(!ordenamiento.isEmpty()){
@@ -338,7 +338,7 @@ public class ConsultaDAO {
 		ArrayList<Material> materiales = new ArrayList<Material>();
 
 		String selectingQuery = "Select cantidad, nombre, unidad from Materiales where tipo='"+tipo+"' ";
-		Iterator<String> iteraGrupos = ordenes.iterator();
+		Iterator<String> iteraGrupos = grupos.iterator();
 		String agrupamiento = "";
 
 		if(inventario != null){selectingQuery += "AND cantidad between ";
@@ -362,10 +362,10 @@ public class ConsultaDAO {
 		while(iteraOrdenes.hasNext()){
 			String orden = iteraOrdenes.next();
 			if (iteraOrdenes.hasNext()) {
-				agrupamiento += orden + ",";
+				ordenamiento += orden + ",";
 			}
 			else{
-				agrupamiento += orden;
+				ordenamiento += orden;
 			}
 		}
 		if(!ordenamiento.isEmpty()){
@@ -414,7 +414,7 @@ public class ConsultaDAO {
 		PreparedStatement statement = null;
 		ArrayList<Producto> productos = new ArrayList<Producto>();
 		String selectingQuery = "Select cantidad, nombre from PRODUCTO";
-		Iterator<String> iteraGrupos = ordenes.iterator();
+		Iterator<String> iteraGrupos = grupos.iterator();
 		String agrupamiento = "";
 		if(inventario != null){selectingQuery += "AND cantidad between ";
 		String[] inven = inventario.split("-");
@@ -440,10 +440,10 @@ public class ConsultaDAO {
 		while(iteraOrdenes.hasNext()){
 			String orden = iteraOrdenes.next();
 			if (iteraOrdenes.hasNext()) {
-				agrupamiento += orden + ",";
+				ordenamiento += orden + ",";
 			}
 			else{
-				agrupamiento += orden;
+				ordenamiento += orden;
 			}
 		}
 		if(!ordenamiento.isEmpty()){
