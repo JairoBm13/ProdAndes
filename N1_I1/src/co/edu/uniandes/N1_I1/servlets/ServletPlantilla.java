@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import co.edu.uniandes.N1_I1.fachada.VideoAndes;
+import co.edu.uniandes.N1_I1.fachada.ProdAndes;
 
 /**
  * clase plantilla, que sirve de base para el dearrollo de

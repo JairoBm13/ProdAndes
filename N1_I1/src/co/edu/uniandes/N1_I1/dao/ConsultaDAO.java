@@ -16,6 +16,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+
 import co.edu.uniandes.N1_I1.vos.Material;
 import co.edu.uniandes.N1_I1.vos.Producto;
 /**
@@ -571,5 +572,44 @@ public class ConsultaDAO {
 			closeConnection(conexion);
 		}
 	}
+	
+	//------------------------------------------------
+	// Metodos para fachada
+	//------------------------------------------------
 
+	public Object inicioSesio(String usuario, String correo, String pass) throws Exception{
+		Object usuarioIniciado = null;
+		PreparedStatement statement = null;
+		String selectQuery = "select * from USUARIO";
+		
+		if(!usuario.isEmpty()){ selectQuery+=" where usuario='"+usuario+"'";}
+		else if(!correo.isEmpty()){ selectQuery+=" where direccionElectronica='"+correo+"'";}
+		selectQuery+=";";
+		try{
+			establecerConexion(cadenaConexion, usuario, clave);
+			statement = conexion.prepareStatement(selectQuery);
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			System.out.println(selectQuery);
+			throw new Exception ("No pudo encontrar al usuario");
+		}
+		finally{
+			if(statement != null){
+				try{
+					statement.close();
+				}catch(SQLException e)
+				{
+					throw new Exception ("No pudo cerrar la conexión");
+				}
+			
+			}
+			closeConnection(conexion);
+		}
+		return usuarioIniciado;
+	}
 }

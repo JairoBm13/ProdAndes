@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import co.edu.uniandes.N1_I1.fachada.VideoAndes;
+import co.edu.uniandes.N1_I1.fachada.ProdAndes;
 
 
 /**
@@ -71,7 +71,7 @@ public abstract class ServletTemplate extends HttpServlet {
     private void procesarPedido( HttpServletRequest request, HttpServletResponse response ) throws IOException
     {
     	//TODO Si hay otras fachadas, ellas tambien deben inicializar la ruta.
-    	VideoAndes.darInstancia().inicializarRuta(this.getServletContext().getRealPath(((HttpServletRequest) this.getServletContext()).getContextPath()));
+    	ProdAndes.darInstancia().inicializarRuta(this.getServletContext().getRealPath(((HttpServletRequest) this.getServletContext()).getContextPath()));
         //
         // Comienza con el Header del template
         imprimirHeader( request, response );

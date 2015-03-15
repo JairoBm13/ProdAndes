@@ -1,32 +1,36 @@
-/**
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * $Id: VideoAndes.java,v 1.10 
- * Universidad de los Andes (Bogotá - Colombia)
- * Departamento de Ingeniería de Sistemas y Computación 
- *
- * Ejercicio: VideoAndes
- * Autor: Juan Diego Toro - 11-Feb-2010
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
 package co.edu.uniandes.N1_I1.fachada;
 
 import java.util.ArrayList;
 
 import co.edu.uniandes.N1_I1.dao.ConsultaDAO;
+import co.edu.uniandes.N1_I1.vos.Cliente;
+import co.edu.uniandes.N1_I1.vos.Operario;
+import co.edu.uniandes.N1_I1.vos.Proveedor;
+import co.edu.uniandes.N1_I1.vos.Usuario;
 
 /**
  * Clase VideoAndes, que representa la fachada de comunicación entre
  * la interfaz y la conexión con la base de datos. Atiende todas
  * las solicitudes.
  */
-public class VideoAndes 
+public class ProdAndes 
 {
+	
+	private final static String ADMIN="sysadmin";
 	/**
 	 * Conexión con la clase que maneja la base de datos
 	 */
 	private ConsultaDAO dao;
 	
-
+	private int tipoUsuario;
+	
+	private Usuario usuarioVal;
+	
+	private Cliente clienteVal;
+	
+	private Proveedor proveedorVal;
+	
+	private Operario operarioVal;
     
     // -----------------------------------------------------------------
     // Singleton
@@ -36,17 +40,17 @@ public class VideoAndes
     /**
      * Instancia única de la clase
      */
-    private static VideoAndes instancia;
+    private static ProdAndes instancia;
     
     /**
      * Devuelve la instancia única de la clase
      * @return Instancia única de la clase
      */
-    public static VideoAndes darInstancia( )
+    public static ProdAndes darInstancia( )
     {
         if( instancia == null )
         {
-            instancia = new VideoAndes( );
+            instancia = new ProdAndes( );
         }
         return instancia;
     }
@@ -54,9 +58,10 @@ public class VideoAndes
 	/**
 	 * contructor de la clase. Inicializa el atributo dao.
 	 */
-	private VideoAndes()
+	private ProdAndes()
 	{
 		dao = new ConsultaDAO();
+		tipoUsuario = 0;
 	}
 	
 	/**
@@ -68,6 +73,14 @@ public class VideoAndes
 	{
 		dao.inicializar(ruta);
 	}
+	
+	
+	// ---------------------------------------------------
+    // Métodos asociados autenticación
+    // ---------------------------------------------------
+    public boolean loggin(String correo, String contrasenia){
+    	Object usuario = null;
+    }
 	
     // ---------------------------------------------------
     // Métodos asociados a los casos de uso: Consulta
