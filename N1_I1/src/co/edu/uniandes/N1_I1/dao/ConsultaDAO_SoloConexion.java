@@ -21,6 +21,21 @@ import java.util.Properties;
 
 
 
+
+
+
+
+
+
+
+
+
+import co.edu.uniandes.N1_I1.vos.EstacionProduccion;
+import co.edu.uniandes.N1_I1.vos.EtapaProduccion;
+import co.edu.uniandes.N1_I1.vos.Material;
+import co.edu.uniandes.N1_I1.vos.Pedido;
+import co.edu.uniandes.N1_I1.vos.PedidoMaterial;
+import co.edu.uniandes.N1_I1.vos.Producto;
 import co.edu.uniandes.N1_I1.vos.VideosValue;
 
 /**
@@ -51,6 +66,12 @@ public class ConsultaDAO_SoloConexion {
 	 * nombre de la columna anyo en la tabla videos.
 	 */
 	private static final String anyoVideo = "anyo";
+	
+	private static final String CONSULTA_PRODUCTO = "Producto";
+	
+	private static final String CONSULTA_MATERIAL = "Material";
+	
+	private static final String CONSULTA_ETAPA_PROD = "Etapa Produccion";
 	
 
 	//----------------------------------------------------
@@ -269,7 +290,7 @@ public class ConsultaDAO_SoloConexion {
     		//Rectifica si hay cantidad suficiente
     		
     		    		
-    		PreparedStatement  prcantidadDisponible = conexion.prepareStatement("SELECT cantidad from Producto where Proceso.codigoProducto="+idProceso+"etapa=0");
+    		PreparedStatement  prcantidadDisponible = conexion.prepareStatement("SELECT cantidad from Producto where Proceso.codigoProducto="+idProceso+" and etapa=0");
     		ResultSet rscantidadDisponible = prcantidadDisponible.executeQuery();
     		prcantidadDisponible.close();
     		
@@ -282,8 +303,8 @@ public class ConsultaDAO_SoloConexion {
     			//crea y despacha el pedido
     			
     			int nuevo = cantidadDisponible-cantidad;
-    			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+nuevo+" where Proceso.codigoProducto="+idProceso+" etapa=0");
-    			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidad+" where Proceso.codigoProducto="+idProceso+" etapa=-1");
+    			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+nuevo+" where Proceso.codigoProducto="+idProceso+" and etapa=0");
+    			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidad+" where Proceso.codigoProducto="+idProceso+" and etapa=-1");
     			psaactualizarDisponibles1.executeUpdate();
     			psaactualizarDisponibles2.executeUpdate();
     			psaactualizarDisponibles1.close();
@@ -298,7 +319,7 @@ public class ConsultaDAO_SoloConexion {
     			
     			pSRequeridosNum.close();
     			pSRequeridosNum =conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-    					+ "values (incremento_id_Pedido.NextVal,listo,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+    					+ "values (incremento_id_Pedido.NextVal,'listo',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
     			pSRequeridosNum.executeUpdate();
     			
     		}
@@ -346,8 +367,8 @@ public class ConsultaDAO_SoloConexion {
         		{
         			//Actualiza los productos si se puede fabricar
         			
-        			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+0+" where Proceso.codigoProducto="+idProceso+" etapa=0");
-        			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidadDisponible+" where Proceso.codigoProducto="+idProceso+" etapa=-1");
+        			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+0+" where Proceso.codigoProducto="+idProceso+" and etapa=0");
+        			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidadDisponible+" where Proceso.codigoProducto="+idProceso+" and etapa=-1");
         			psaactualizarDisponibles1.executeUpdate();
         			psaactualizarDisponibles2.executeUpdate();
         			psaactualizarDisponibles1.close();
@@ -380,7 +401,7 @@ public class ConsultaDAO_SoloConexion {
         			
         			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,enProduccion,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,'enProduccion',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
         			pSRequeridosNum.executeUpdate();
         			
         			
@@ -399,7 +420,7 @@ public class ConsultaDAO_SoloConexion {
         			
         			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,enEspera,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,'enEspera',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
         			pSRequeridosNum.executeUpdate();
         			
         			
@@ -431,8 +452,194 @@ public class ConsultaDAO_SoloConexion {
     	}
     	return fallo?false:true;
     }
+    
+    
+    public Object[] consultarMaterial(Long idMaterial, String tipoPedido, String tipo, Integer[] volumen, Date[] fechas, Double[] costo, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception
+    {
+    	if(tipoPedido.equals(CONSULTA_PRODUCTO))
+    		return consultarMaterialProducto(idMaterial, fechas, costo, ordenes, grupos);
+    	else
+    		return consultarMaterialMaterial(idMaterial, tipoPedido, tipo, volumen, ordenes, grupos);
+    	
+    }
+    
+    public Object[] consultarMaterialProducto(Long idProducto, Date[] fechas, Double[] costo, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception
+    {
+    	PreparedStatement prepStmt = null;
+    	Producto producto = new Producto();
+    	ArrayList<EtapaProduccion> etapasProduc = new ArrayList<EtapaProduccion>();
+    	ArrayList<Material> materiales = new ArrayList<Material>();
+    	ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
 
+    	try {
+    		establecerConexion(cadenaConexion, usuario, clave);
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * from Producto where Producto.codigo="+idProducto+" and etapa=0");
+    		
+    		ResultSet rsProducto = prepStmt.executeQuery();
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * from Producto where Producto.codigo="+idProducto+" and etapa=-1");
+    		
+    		ResultSet rsProducto1 = prepStmt.executeQuery();
+    		
+    		
+    		while(rsProducto.next())
+    		{
+    			rsProducto1.next();
+    			producto = new Producto(rsProducto.getLong("codigo"), rsProducto.getString("nombre"), rsProducto.getInt("cantidad"), rsProducto1.getInt("cantidad"), rsProducto.getString("descripcion"), rsProducto.getDouble("costo"), rsProducto.getInt("estado"), rsProducto.getInt("numEtapas"));
+    			
+    			
+    		}
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * from Proceso, etapa, etapaProduccion etaProd "
+    				+ "where Proceso.codigoProducto="+idProducto+" and etapa.codigoProceso=proceso.codigo and etapa.codigoEtapa=etaProd.codigo");
+    		
+    		ResultSet rsEtapaProd = prepStmt.executeQuery();
+    		
+    		while(rsEtapaProd.next())
+    		{
+    			etapasProduc.add(new EtapaProduccion(rsEtapaProd.getLong("etaProd.codigo"), rsEtapaProd.getInt("etaProd.etapa"), rsEtapaProd.getString("etaProd.nombre"), rsEtapaProd.getDate("etaProd.fechaInicio"), rsEtapaProd.getDate("etaProd.fechaFin"), rsEtapaProd.getLong("etaProd.tiempoEjecucion"), rsEtapaProd.getString("etaProd.descripcion")));
+    			
+    			prepStmt = conexion.prepareStatement("SELECT * FROM (ETAPAPRODUCCION, ESTACIONPRODUCCION, REQUIERE "
+        				+ "where "+rsEtapaProd.getLong("etaProd.codigo")+"=etapaProduccion.codigo "
+						+ " and etapaProduccion.codigo=estacionProduccion.codigoEtapa and requiere.codigoEstacion=estacionProduccion.codigo) consulta"
+						+ "INNER JOIN Materiales mat ON consulta.codigoMaterial= mat.codigo");
+    		
+    			ResultSet rsMateriales = prepStmt.executeQuery();
+    			
+    			while(rsMateriales.next())
+        		{
+        			materiales.add(new Material(rsMateriales.getDouble("cantidad"), rsMateriales.getLong("codigo"), rsMateriales.getString("tipo"), rsMateriales.getString("unidad"), rsMateriales.getString("nombre"), rsMateriales.getDate("ultimoAbastecimiento")));
+        			   			
+        			
+        		}
+    			 
+    			
+    		}
+    		
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * FROM PEDIDO where PEDIDO.codigoProducto="+idProducto);
+    		
+    		ResultSet rsPedido = prepStmt.executeQuery();
+    		
+    		while(rsPedido.next())
+    		{
+    			pedidos.add(new Pedido(rsPedido.getLong("codigo"), rsPedido.getInt("estado"), rsPedido.getLong("number"), rsPedido.getDate("fechaPedido"), rsPedido.getDate("fechaEsperada"), rsPedido.getDate("fechaEntrega")));
+    			   			   			
+    			
+    		}
+    		
+    		
 
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		System.out.println("metodo1");
+    		throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+    	}finally 
+    	{
+    		if (prepStmt != null) 
+    		{
+    			try {
+    				prepStmt.close();
+    			} catch (SQLException exception) {
+
+    				throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+    			}
+    		}
+    		closeConnection(conexion);
+    	}	
+    	return new Object[]{producto,etapasProduc,materiales,pedidos};
+    }
+
+    public Object[] consultarMaterialMaterial(Long idMaterial, String tipoPedido, String tipo, Integer[] volumen, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception
+    {
+    	PreparedStatement prepStmt = null;
+    	Material material = new Material();
+    	ArrayList<EtapaProduccion> etapasProduc = new ArrayList<EtapaProduccion>();
+    	ArrayList<Producto> productos = new ArrayList<Producto>();
+    	ArrayList<PedidoMaterial> pedidosMaterial = new ArrayList<PedidoMaterial>();
+    	
+    	try {
+    		establecerConexion(cadenaConexion, usuario, clave);
+    		
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * from Material where codigo="+idMaterial+"");
+    		
+    		ResultSet rsMaterial = prepStmt.executeQuery();
+    		
+    		
+    		while(rsMaterial.next())
+    		{
+    			material = new Material(rsMaterial.getDouble("cantidad"), rsMaterial.getLong("codigo"), rsMaterial.getString("tipo"), rsMaterial.getString("unidad"), rsMaterial.getString("nombre"), rsMaterial.getDate("ultimoAbastecimiento"));
+    			
+    			
+    		}
+    		
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * FROM (Materiales, ESTACIONPRODUCCION, REQUIERE "
+    				+ "where "+idMaterial+"=Materiales.codigo "
+					+ " and requiere.codigoMaterial= Materiales.codigo and requiere.codigoEstacion=estacionProduccion.codigo) consulta"
+					+ "INNER JOIN ETAPAPRODUCCION etaProd ON consulta.codigoEtapa= etapaProd.codigo");
+    		
+    		
+    		
+    		ResultSet rsEtapaProd = prepStmt.executeQuery();
+    		
+    		while(rsEtapaProd.next())
+    		{
+    			etapasProduc.add(new EtapaProduccion(rsEtapaProd.getLong("etaProd.codigo"), rsEtapaProd.getInt("etaProd.etapa"), rsEtapaProd.getString("etaProd.nombre"), rsEtapaProd.getDate("etaProd.fechaInicio"), rsEtapaProd.getDate("etaProd.fechaFin"), rsEtapaProd.getLong("etaProd.tiempoEjecucion"), rsEtapaProd.getString("etaProd.descripcion")));
+    			
+    			prepStmt = conexion.prepareStatement("SELECT * etapaProduccion ep inner join producto pr "
+        				+ "on pr.codigo=ep.codigoProducto and pr.codigo="+rsEtapaProd.getLong("etaProd.codigo")+" and etapa=0");
+        		
+    		
+    			ResultSet rsProductos = prepStmt.executeQuery();
+    			
+    			while(rsProductos.next())
+        		{
+    				productos.add(new Producto(rsProductos.getLong("pr.codigo"), rsProductos.getString("pr.nombre"), rsProductos.getInt("pr.cantidad"), 0, rsProductos.getString("pr.descripcion"), rsProductos.getDouble("pr.costo"), rsProductos.getInt("pr.estado"), rsProductos.getInt("pr.numEtapas")));
+        			   			
+        			
+        		}
+    			 
+    			
+    		}
+    		
+    		
+    		prepStmt = conexion.prepareStatement("SELECT * FROM PEDIDOMATERIAL where PEDIDOMATERIAL.codioMaterial="+idMaterial);
+    		
+    		ResultSet rsPedido = prepStmt.executeQuery();
+    		
+    		while(rsPedido.next())
+    		{
+    			pedidosMaterial.add(new PedidoMaterial(rsPedido.getLong("codigo"), rsPedido.getInt("cantidadPedida"), rsPedido.getDate("fechaPedido"), rsPedido.getDate("fechaEsperada"), rsPedido.getDouble("costo")));
+    			   			   			
+    			
+    		}
+    		   		
+    		
+
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		System.out.println("metodo1");
+    		throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+    	}finally 
+    	{
+    		if (prepStmt != null) 
+    		{
+    			try {
+    				prepStmt.close();
+    			} catch (SQLException exception) {
+
+    				throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+    			}
+    		}
+    		closeConnection(conexion);
+    	}	
+    	return new Object[]{material,etapasProduc,productos,pedidosMaterial};
+    }
+    
+    
     public static void main(String[] args) {
     	ConsultaDAO_SoloConexion c = new ConsultaDAO_SoloConexion();
     	c.inicializar();

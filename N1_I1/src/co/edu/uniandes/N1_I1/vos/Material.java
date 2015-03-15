@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Material {
 	
-	private int cantidad;
+	private double cantidad;
 	
 	private long codigo;
 	
@@ -28,11 +28,25 @@ public class Material {
 		suministro = new ArrayList<Suministro>();
 	}
 	
-	public int getCantidad() {
+	public Material(double cantidadT, long codigoT, String tipoT, String unidadT, String nombreT, Date ultimoAbastecimientoT)
+	{
+		cantidad=cantidadT;
+		codigo=codigoT;
+		tipo=tipoT;
+		unidad=unidadT;
+		nombre=nombreT;
+		ultimoAbastecimiento=ultimoAbastecimientoT;
+		
+		requiere = new ArrayList<Requiere>();
+		
+		suministro = new ArrayList<Suministro>();
+	}
+	
+	public double getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(int cantidad) {
+	public void setCantidad(double cantidad) {
 		this.cantidad = cantidad;
 	}
 

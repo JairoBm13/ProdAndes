@@ -31,6 +31,20 @@ public class EtapaProduccion {
 		productos = new ArrayList<Producto>();
 		estacionProduccion = new ArrayList<EstacionProduccion>();
 	}
+	
+	public EtapaProduccion(long codigoT, int etapaT, String nombreT, Date fechaInicioT, Date fechaFinT, long tiempoEjecuacionT, String descripcionT)
+	{
+		codigo = codigoT;
+		etapa=etapaT;
+		nombre=nombreT;
+		fechaInicio=fechaInicioT;
+		fechaFin=fechaFinT;
+		tiempoEjecuacion=tiempoEjecuacionT;
+		descripcion=descripcionT;
+		etapas = new ArrayList<Etapa>();
+		productos = new ArrayList<Producto>();
+		estacionProduccion = new ArrayList<EstacionProduccion>();
+	}
 
 	public long getCodigo() {
 		return codigo;

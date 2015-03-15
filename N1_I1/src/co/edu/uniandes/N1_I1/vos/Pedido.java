@@ -26,6 +26,16 @@ public class Pedido {
 	{
 		
 	}
+	
+	public Pedido(long codigoT , int estadoT, long cantidadT, Date fechaPedidoT, Date fechaEsperadaT, Date fechaEntregaT)
+	{
+		codigo=codigoT;
+		estado=estadoT;
+		cantidad=cantidadT;
+		fechaPedido=fechaPedidoT;
+		fechaEsperada=fechaEsperadaT;
+		fechaEntrega=fechaEntregaT;
+	}
 
 	public long getCodigo() {
 		return codigo;

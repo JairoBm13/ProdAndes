@@ -8,7 +8,9 @@ public class Producto {
 	
 	private String nombre;
 	
-	private int cantidad;
+	private int cantidadDisponible;
+	
+	private int cantidadEnProduccion;
 	
 	private String descripcion;
 	
@@ -28,6 +30,19 @@ public class Producto {
 	{
 		pedidos = new ArrayList<Pedido>();
 	}
+	
+	public Producto(long codigoT, String nombreT, int cantidadDisponibleT, int cantidadEnProduccionT, String descripcionT,double costoT, int estadoT, int numEtapasT)
+	{
+		pedidos = new ArrayList<Pedido>();
+		codigo=codigoT;
+		nombre=nombreT;
+		cantidadDisponible=cantidadDisponibleT;
+		cantidadEnProduccion=cantidadEnProduccionT;
+		descripcion=descripcionT;
+		costo=costoT;
+		estado=estadoT;
+		numEtapas=numEtapasT;
+	}
 
 	public long getCodigo() {
 		return codigo;
@@ -45,12 +60,12 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-	public int getCantidad() {
-		return cantidad;
+	public int getCantidadDisponible() {
+		return cantidadDisponible;
 	}
 
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
+	public void setCantidadDisponible(int cantidad) {
+		this.cantidadDisponible = cantidad;
 	}
 
 	public String getDescripcion() {
@@ -108,6 +123,15 @@ public class Producto {
 	public void setNumEtapas(int numEtapas) {
 		this.numEtapas = numEtapas;
 	}
+
+	public int getCantidadEnProduccion() {
+		return cantidadEnProduccion;
+	}
+
+	public void setCantidadEnProduccion(int cantidadEnProduccion) {
+		this.cantidadEnProduccion = cantidadEnProduccion;
+	}
+	
 	
 	
 	
