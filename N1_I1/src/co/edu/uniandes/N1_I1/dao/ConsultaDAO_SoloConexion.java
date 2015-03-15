@@ -20,6 +20,7 @@ import java.util.Properties;
 
 
 
+
 import co.edu.uniandes.N1_I1.vos.VideosValue;
 
 /**
@@ -251,6 +252,159 @@ public class ConsultaDAO_SoloConexion {
     		}
     		closeConnection(conexion);
     	}	
+    }
+    
+    
+    public boolean registrarPedidoProducto(Long idProceso, String loginCLiente, int cantidad, Date fechaEspera) throws Exception
+    {
+    	
+    	boolean fallo = false; 
+
+    	PreparedStatement prepStmt = null;
+    	PreparedStatement pSRequeridosNum = null;
+
+    	try {
+    		establecerConexion(cadenaConexion, usuario, clave);
+    		
+    		//Rectifica si hay cantidad suficiente
+    		
+    		    		
+    		PreparedStatement  prcantidadDisponible = conexion.prepareStatement("SELECT cantidad from Producto where Proceso.codigoProducto="+idProceso+"etapa=0");
+    		ResultSet rscantidadDisponible = prcantidadDisponible.executeQuery();
+    		
+    		int cantidadDisponible=0;
+    		if(rscantidadDisponible.next())
+    			cantidadDisponible = rscantidadDisponible.getInt("cantidad");
+    		
+    		if(cantidadDisponible>=cantidad)
+    		{
+    			//crea y despacha el pedido
+    			
+    			int nuevo = cantidadDisponible-cantidad;
+    			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+nuevo+"where Proceso.codigoProducto="+idProceso+"etapa=0");
+    			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidad+"where Proceso.codigoProducto="+idProceso+"etapa=-1");
+    			psaactualizarDisponibles1.executeUpdate();
+    			psaactualizarDisponibles2.executeUpdate();
+    			
+    			//Codigo del admin y crea pedido
+    			pSRequeridosNum = conexion.prepareStatement("select codigo from Administrador");
+    			ResultSet admin = pSRequeridosNum.executeQuery();
+    			int adminID =0;
+    			if(admin.next())
+    				adminID=admin.getInt("codigo");
+    			
+    			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
+    					+ "values (incremento_id_Pedido.NextVal,listo,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+    			
+    		}
+    		else
+    		{
+    			
+    			//establece si se puede reservar o no
+    			
+    			//Primero obtiene la cantidad de material que requiere un producto
+        		
+    			conexion.prepareStatement("Create View consulta as (SELECT * FROM PROCESO, ETAPA, ETAPAPRODUCCION, ESTACIONPRODUCCION, REQUIERE "
+        				+ "where Proceso.codigoProducto="+idProceso+" and etapa.codigoProceso=proceso.codigo and etapa.codigoEtapa=etapaProduccion.codigo "
+						+ " and etapaProduccion.codigo=estacionProduccion.codigoEtapa and requiere.codioEstacion=estacionProduccion.codigo) ").executeQuery();
+    			
+        		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from consulta");
+
+        		
+        		
+        		ResultSet rsRequeridos = pSRequeridosNum.executeQuery();
+        		
+        		int cantidadRequerido = 0;
+        		
+        		if(rsRequeridos.next())
+        			cantidadRequerido=rsRequeridos.getInt("cuenta");
+        		
+        		conexion.prepareStatement("Create View matDisp as (SELECT * FROM consulta INNER JOIN Materiales mat ON req.codigoMaterial= mat.codigo where consulta.cantidad*"+cantidad+" <= mat.cantidad )").executeQuery();
+        		
+        		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from matDisp");
+        		
+        		ResultSet rsDisponibleMat = pSRequeridosNum.executeQuery();
+        		
+        		int cantidadDisponibleMat = 0;
+        		
+        		if(rsDisponibleMat.next())
+        			cantidadDisponibleMat=rsDisponibleMat.getInt("cuenta");
+        		
+        		if(cantidadDisponibleMat==cantidadRequerido)
+        		{
+        			//Actualiza los productos si se puede fabricar
+        			
+        			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+0+"where Proceso.codigoProducto="+idProceso+"etapa=0");
+        			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidadDisponible+"where Proceso.codigoProducto="+idProceso+"etapa=-1");
+        			psaactualizarDisponibles1.executeUpdate();
+        			psaactualizarDisponibles2.executeUpdate();
+        			
+        			pSRequeridosNum = conexion.prepareStatement("select * from matDisp");
+        			ResultSet materialesReservar = pSRequeridosNum.executeQuery();
+        			
+        			PreparedStatement actualizar;
+        			
+        			while(materialesReservar.next()){
+        				
+        				String cod = materialesReservar.getString("mat.codigo");
+        				int resta = materialesReservar.getInt("req.cantidad")*cantidad;
+        				
+        				actualizar=conexion.prepareStatement("update Material set cantidad=cantidad-"+resta+"where codigo="+cod);		
+        			}
+        			
+        			//Codigo del admin y crea pedido
+        			pSRequeridosNum = conexion.prepareStatement("select codigo from Administrador");
+        			ResultSet admin = pSRequeridosNum.executeQuery();
+        			int adminID =0;
+        			if(admin.next())
+        				adminID=admin.getInt("codigo");
+        			
+        			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
+        					+ "values (incremento_id_Pedido.NextVal,enProduccion,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        			
+        			
+        			
+        		}
+        		else
+        		{
+        			//Deja el pedido en pendiente
+        			//Codigo del admin y crea pedido
+        			pSRequeridosNum = conexion.prepareStatement("select codigo from Administrador");
+        			ResultSet admin = pSRequeridosNum.executeQuery();
+        			int adminID =0;
+        			if(admin.next())
+        				adminID=admin.getInt("codigo");
+        			
+        			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
+        					+ "values (incremento_id_Pedido.NextVal,enEspera,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        			
+        			
+        		}
+
+    		}
+    		
+    		
+    		
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		System.out.println("metodo1");
+    		fallo = true;
+    		throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+    		
+    	}finally 
+    	{
+    		if (prepStmt != null) 
+    		{
+    			try {
+    				prepStmt.close();
+    			} catch (SQLException exception) {
+
+    				throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+    			}
+    		}
+    		closeConnection(conexion);
+    		return fallo?false:true;
+    	}
     }
 
 

@@ -16,6 +16,8 @@ public class Producto {
 	
 	private int estado;
 	
+	private int numEtapas;
+	
 	private Proceso proceso;
 	
 	private EtapaProduccion etapaProduccion;
@@ -97,6 +99,14 @@ public class Producto {
 
 	public void setPedidos(ArrayList<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public int getNumEtapas() {
+		return numEtapas;
+	}
+
+	public void setNumEtapas(int numEtapas) {
+		this.numEtapas = numEtapas;
 	}
 	
 	
