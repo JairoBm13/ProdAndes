@@ -281,8 +281,8 @@ public class ConsultaDAO_SoloConexion {
     			//crea y despacha el pedido
     			
     			int nuevo = cantidadDisponible-cantidad;
-    			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+nuevo+"where Proceso.codigoProducto="+idProceso+"etapa=0");
-    			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidad+"where Proceso.codigoProducto="+idProceso+"etapa=-1");
+    			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+nuevo+" where Proceso.codigoProducto="+idProceso+" etapa=0");
+    			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidad+" where Proceso.codigoProducto="+idProceso+" etapa=-1");
     			psaactualizarDisponibles1.executeUpdate();
     			psaactualizarDisponibles2.executeUpdate();
     			
@@ -294,7 +294,7 @@ public class ConsultaDAO_SoloConexion {
     				adminID=admin.getInt("codigo");
     			
     			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-    					+ "values (incremento_id_Pedido.NextVal,listo,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+    					+ "values (incremento_id_Pedido.NextVal,listo,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )").executeUpdate();
     			
     		}
     		else
@@ -306,7 +306,7 @@ public class ConsultaDAO_SoloConexion {
         		
     			conexion.prepareStatement("Create View consulta as (SELECT * FROM PROCESO, ETAPA, ETAPAPRODUCCION, ESTACIONPRODUCCION, REQUIERE "
         				+ "where Proceso.codigoProducto="+idProceso+" and etapa.codigoProceso=proceso.codigo and etapa.codigoEtapa=etapaProduccion.codigo "
-						+ " and etapaProduccion.codigo=estacionProduccion.codigoEtapa and requiere.codioEstacion=estacionProduccion.codigo) ").executeQuery();
+						+ " and etapaProduccion.codigo=estacionProduccion.codigoEtapa and requiere.codigoEstacion=estacionProduccion.codigo) ").executeUpdate();
     			
         		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from consulta");
 
@@ -319,7 +319,7 @@ public class ConsultaDAO_SoloConexion {
         		if(rsRequeridos.next())
         			cantidadRequerido=rsRequeridos.getInt("cuenta");
         		
-        		conexion.prepareStatement("Create View matDisp as (SELECT * FROM consulta INNER JOIN Materiales mat ON req.codigoMaterial= mat.codigo where consulta.cantidad*"+cantidad+" <= mat.cantidad )").executeQuery();
+        		conexion.prepareStatement("Create View matDisp as (SELECT * FROM consulta INNER JOIN Materiales mat ON consulta.codigoMaterial= mat.codigo where consulta.cantidad*"+(cantidad-cantidadDisponible)+" <= mat.cantidad )").executeQuery();
         		
         		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from matDisp");
         		
@@ -334,8 +334,8 @@ public class ConsultaDAO_SoloConexion {
         		{
         			//Actualiza los productos si se puede fabricar
         			
-        			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+0+"where Proceso.codigoProducto="+idProceso+"etapa=0");
-        			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidadDisponible+"where Proceso.codigoProducto="+idProceso+"etapa=-1");
+        			PreparedStatement  psaactualizarDisponibles1 = conexion.prepareStatement("update Productos set cantidad="+0+" where Proceso.codigoProducto="+idProceso+" etapa=0");
+        			PreparedStatement  psaactualizarDisponibles2 = conexion.prepareStatement("update Productos set cantidad=cantidad+"+cantidadDisponible+" where Proceso.codigoProducto="+idProceso+" etapa=-1");
         			psaactualizarDisponibles1.executeUpdate();
         			psaactualizarDisponibles2.executeUpdate();
         			
@@ -347,9 +347,10 @@ public class ConsultaDAO_SoloConexion {
         			while(materialesReservar.next()){
         				
         				String cod = materialesReservar.getString("mat.codigo");
-        				int resta = materialesReservar.getInt("req.cantidad")*cantidad;
+        				int resta = materialesReservar.getInt("consulta.cantidad")*cantidad;
         				
-        				actualizar=conexion.prepareStatement("update Material set cantidad=cantidad-"+resta+"where codigo="+cod);		
+        				actualizar=conexion.prepareStatement("update Material set cantidad=cantidad-"+resta+" where codigo="+cod);	
+        				actualizar.executeUpdate();
         			}
         			
         			//Codigo del admin y crea pedido
@@ -360,7 +361,7 @@ public class ConsultaDAO_SoloConexion {
         				adminID=admin.getInt("codigo");
         			
         			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,enProduccion,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,enProduccion,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )").executeUpdate();
         			
         			
         			
@@ -376,7 +377,7 @@ public class ConsultaDAO_SoloConexion {
         				adminID=admin.getInt("codigo");
         			
         			conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,enEspera,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,enEspera,"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )").executeUpdate();
         			
         			
         		}
@@ -403,8 +404,8 @@ public class ConsultaDAO_SoloConexion {
     			}
     		}
     		closeConnection(conexion);
-    		return fallo?false:true;
     	}
+    	return fallo?false:true;
     }
 
 

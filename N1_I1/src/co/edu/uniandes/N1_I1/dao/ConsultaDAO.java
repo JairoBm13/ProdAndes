@@ -18,6 +18,8 @@ import java.util.Properties;
 
 
 
+
+
 import co.edu.uniandes.N1_I1.vos.VideosValue;
 
 /**
@@ -32,33 +34,33 @@ public class ConsultaDAO {
 	 * ruta donde se encuentra el archivo de conexión.
 	 */
 	private static final String ARCHIVO_CONEXION = "/../conexion.properties";
-	
+
 	/**
 	 * nombre de la tabla videos
 	 */
 	private static final String tablaVideo = "videos";
-	
-	
+
+
 	/**
 	 * nombre de la columna titulo_original en la tabla videos.
 	 */
 	private static final String tituloVideo = "titulo_original";
-	
+
 	/**
 	 * nombre de la columna anyo en la tabla videos.
 	 */
 	private static final String anyoVideo = "anyo";
-	
+
 
 	//----------------------------------------------------
 	//Consultas
 	//----------------------------------------------------
-	
+
 	/**
 	 * Consulta que devuelve isan, titulo, y año de los videos en orden alfabetico
 	 */
 	private static final String consultaVideosDefault="SELECT *, FROM "+tablaVideo;
-	
+
 
 	//----------------------------------------------------
 	//Atributos
@@ -67,33 +69,33 @@ public class ConsultaDAO {
 	 * conexion con la base de datos
 	 */
 	public Connection conexion;
-	
+
 	/**
 	 * nombre del usuario para conectarse a la base de datos.
 	 */
 	private String usuario;
-	
+
 	/**
 	 * clave de conexión a la base de datos.
 	 */
 	private String clave;
-	
+
 	/**
 	 * URL al cual se debe conectar para acceder a la base de datos.
 	 */
 	private String cadenaConexion;
-	
+
 	/**
 	 * constructor de la clase. No inicializa ningun atributo.
 	 */
 	public ConsultaDAO() 
 	{		
-		
+
 	}
-	
+
 	// -------------------------------------------------
-    // Métodos
-    // -------------------------------------------------
+	// Métodos
+	// -------------------------------------------------
 
 	/**
 	 * obtiene ls datos necesarios para establecer una conexion
@@ -108,16 +110,16 @@ public class ConsultaDAO {
 			Properties prop = new Properties();
 			FileInputStream in = new FileInputStream( arch );
 
-	        prop.load( in );
-	        in.close( );
+			prop.load( in );
+			in.close( );
 
 			cadenaConexion = prop.getProperty("url");	// El url, el usuario y passwd deben estar en un archivo de propiedades.
-												// url: "jdbc:oracle:thin:@chie.uniandes.edu.co:1521:chie10";
+			// url: "jdbc:oracle:thin:@chie.uniandes.edu.co:1521:chie10";
 			usuario = prop.getProperty("usuario");	// "s2501aXX";
 			clave = prop.getProperty("clave");	// "c2501XX";
 			final String driver = prop.getProperty("driver");
 			Class.forName(driver);
-		
+
 		}
 		catch(Exception e)
 		{
@@ -133,69 +135,69 @@ public class ConsultaDAO {
 	 * @param clave clave de acceso a la base de datos
 	 * @throws SQLException si ocurre un error generando la conexión con la base de datos.
 	 */
-    private void establecerConexion(String url, String usuario, String clave) throws SQLException
-    {
-    	try
-        {
+	private void establecerConexion(String url, String usuario, String clave) throws SQLException
+	{
+		try
+		{
 			conexion = DriverManager.getConnection(url,usuario,clave);
-        }
-        catch( SQLException exception )
-        {
-            throw new SQLException( "ERROR: ConsultaDAO obteniendo una conexi—n." );
-        }
-    }
-    
-    /**
- 	 *Cierra la conexión activa a la base de datos. Además, con=null.
-     * @param con objeto de conexión a la base de datos
-     * @throws SistemaCinesException Si se presentan errores de conexión
-     */
-    public void closeConnection(Connection connection) throws Exception {        
+		}
+		catch( SQLException exception )
+		{
+			throw new SQLException( "ERROR: ConsultaDAO obteniendo una conexi—n." );
+		}
+	}
+
+	/**
+	 *Cierra la conexión activa a la base de datos. Además, con=null.
+	 * @param con objeto de conexión a la base de datos
+	 * @throws SistemaCinesException Si se presentan errores de conexión
+	 */
+	public void closeConnection(Connection connection) throws Exception {        
 		try {
 			connection.close();
 			connection = null;
 		} catch (SQLException exception) {
 			throw new Exception("ERROR: ConsultaDAO: closeConnection() = cerrando una conexión.");
 		}
-    } 
-    
-    // ---------------------------------------------------
-    // Métodos asociados a los casos de uso: Consulta
-    // ---------------------------------------------------
-    
-    /**
-     * Método que se encarga de realizar la consulta en la base de datos
-     * y retorna un ArrayList de elementos tipo VideosValue.
-     * @return ArrayList lista que contiene elementos tipo VideosValue.
-     * La lista contiene los videos ordenados alfabeticamente
-     * @throws Exception se lanza una excepción si ocurre un error en
-     * la conexión o en la consulta. 
-     */
-    public ArrayList<VideosValue> darVideosDefault() throws Exception
-    {
-    	PreparedStatement prepStmt = null;
-    	
-    	ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
+	} 
+
+	// ---------------------------------------------------
+	// Métodos asociados a los casos de uso: Consulta
+	// ---------------------------------------------------
+
+	/**
+	 * Método que se encarga de realizar la consulta en la base de datos
+	 * y retorna un ArrayList de elementos tipo VideosValue.
+	 * @return ArrayList lista que contiene elementos tipo VideosValue.
+	 * La lista contiene los videos ordenados alfabeticamente
+	 * @throws Exception se lanza una excepción si ocurre un error en
+	 * la conexión o en la consulta. 
+	 */
+	public ArrayList<VideosValue> darVideosDefault() throws Exception
+	{
+		PreparedStatement prepStmt = null;
+
+		ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
 		VideosValue vidValue = new VideosValue();
-    	
+
 		try {
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(consultaVideosDefault);
-			
+
 			ResultSet rs = prepStmt.executeQuery();
-			
+
 			while(rs.next()){
 				String titVid = rs.getString(tituloVideo);
 				int anyoVid = rs.getInt(anyoVideo);
-				
+
 				vidValue.setTituloOriginal(titVid);
 				vidValue.setAnyo(anyoVid);	
-			
+
 				videos.add(vidValue);
 				vidValue = new VideosValue();
-							
+
 			}
-		
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(consultaVideosDefault);
@@ -207,17 +209,103 @@ public class ConsultaDAO {
 				try {
 					prepStmt.close();
 				} catch (SQLException exception) {
-					
+
 					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
 				}
 			}
 			closeConnection(conexion);
 		}		
 		return videos;
-    }
-    
-    
-    public void registrar(){
-    	
-    }
+	}
+
+	//FIXME
+	/**
+	 * 
+	 * @param codigo
+	 * @param etapa
+	 * @throws Exception
+	 */
+	public void registrarEjecucionEtapaDeProduccion(int codigo, int etapa) throws Exception{
+		PreparedStatement statement = null;		
+
+		try {
+			String selectQuery = "select cantidad from producto where estado="+etapa+"codigo="+codigo+";";
+			establecerConexion(cadenaConexion, usuario, clave);
+			statement = conexion.prepareStatement(selectQuery);
+			
+			ResultSet rs = statement.executeQuery();
+			int cantidad;
+			rs.next();
+				cantidad = rs.getInt("cantidad");
+			String updateIncQuery = "update producto set cantidad=cantidad+"+cantidad+" where codigo="+codigo+" estado="+etapa+1+";";
+			statement = conexion.prepareStatement(updateIncQuery);
+			statement.executeUpdate();
+			String updateDecQuery = "update producto set cantidad=0 where codigo="+codigo+" estado="+etapa+";";
+			statement = conexion.prepareStatement(updateDecQuery);
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(consultaVideosDefault);
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null) 
+			{
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}
+	}
+	
+	//TODO
+	/**
+	 * 
+	 * @param cantidad
+	 * @param codigo
+	 * @throws Exception
+	 */
+	public void registrarLlegadaDeInsumos(double cantidad, int codigo) throws Exception{
+		PreparedStatement statement = null;		
+
+		try {
+			establecerConexion(cadenaConexion, usuario, clave);
+			
+			String updateDecQuery = "update producto set cantidad=cantidad+"+cantidad+" where codigo="+codigo+";";
+			statement = conexion.prepareStatement(updateDecQuery);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(consultaVideosDefault);
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null) 
+			{
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}
+	}
+	
+	public ArrayList consultarExistenciaDe(String tipo){
+		ArrayList resultado = new ArrayList();
+		if(tipo.equals("Producto")){
+			
+		}
+		else if(tipo.equals("Material")){
+			
+		}
+		return resultado;
+	}
 }
