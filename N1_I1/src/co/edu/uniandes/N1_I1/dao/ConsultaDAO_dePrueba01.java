@@ -16,12 +16,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-
-
-
-
-import co.edu.uniandes.N1_I1.vos.VideosValue;
-
 /**
  * Clase ConsultaDAO, encargada de hacer las consultas básicas para el cliente
  */
@@ -165,58 +159,58 @@ public class ConsultaDAO_dePrueba01 {
     // Métodos asociados a los casos de uso: Consulta
     // ---------------------------------------------------
     
-    /**
-     * Método que se encarga de realizar la consulta en la base de datos
-     * y retorna un ArrayList de elementos tipo VideosValue.
-     * @return ArrayList lista que contiene elementos tipo VideosValue.
-     * La lista contiene los videos ordenados alfabeticamente
-     * @throws Exception se lanza una excepción si ocurre un error en
-     * la conexión o en la consulta. 
-     */
-    public ArrayList<VideosValue> darVideosDefault() throws Exception
-    {
-    	PreparedStatement prepStmt = null;
-    	
-    	ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
-		VideosValue vidValue = new VideosValue();
-    	
-		try {
-			establecerConexion(cadenaConexion, usuario, clave);
-			prepStmt = conexion.prepareStatement(consultaVideosDefault);
-			
-			ResultSet rs = prepStmt.executeQuery();
-			
-			while(rs.next()){
-				String titVid = rs.getString(tituloVideo);
-				int anyoVid = rs.getInt(anyoVideo);
-				
-				vidValue.setTituloOriginal(titVid);
-				vidValue.setAnyo(anyoVid);	
-			
-				videos.add(vidValue);
-				vidValue = new VideosValue();
-							
-			}
-		
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(consultaVideosDefault);
-			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
-		}finally 
-		{
-			if (prepStmt != null) 
-			{
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					
-					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
-				}
-			}
-			closeConnection(conexion);
-		}		
-		return videos;
-    }
+//    /**
+//     * Método que se encarga de realizar la consulta en la base de datos
+//     * y retorna un ArrayList de elementos tipo VideosValue.
+//     * @return ArrayList lista que contiene elementos tipo VideosValue.
+//     * La lista contiene los videos ordenados alfabeticamente
+//     * @throws Exception se lanza una excepción si ocurre un error en
+//     * la conexión o en la consulta. 
+//     */
+//    public ArrayList<VideosValue> darVideosDefault() throws Exception
+//    {
+//    	PreparedStatement prepStmt = null;
+//    	
+//    	ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
+//		VideosValue vidValue = new VideosValue();
+//    	
+//		try {
+//			establecerConexion(cadenaConexion, usuario, clave);
+//			prepStmt = conexion.prepareStatement(consultaVideosDefault);
+//			
+//			ResultSet rs = prepStmt.executeQuery();
+//			
+//			while(rs.next()){
+//				String titVid = rs.getString(tituloVideo);
+//				int anyoVid = rs.getInt(anyoVideo);
+//				
+//				vidValue.setTituloOriginal(titVid);
+//				vidValue.setAnyo(anyoVid);	
+//			
+//				videos.add(vidValue);
+//				vidValue = new VideosValue();
+//							
+//			}
+//		
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			System.out.println(consultaVideosDefault);
+//			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+//		}finally 
+//		{
+//			if (prepStmt != null) 
+//			{
+//				try {
+//					prepStmt.close();
+//				} catch (SQLException exception) {
+//					
+//					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+//				}
+//			}
+//			closeConnection(conexion);
+//		}		
+//		return videos;
+//    }
     
     public void metodo1() throws Exception{
     	//////////////////
