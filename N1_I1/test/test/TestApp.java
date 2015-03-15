@@ -1,6 +1,7 @@
 package test;
 
 import java.sql.Date;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import junit.framework.TestCase;
 
@@ -18,6 +19,7 @@ public class TestApp extends TestCase
 	{
 		try 
 		{
+			dao.eliminarMaterial(10020);
 			dao.agregarMaterialSinEliminar(1, 10020, "Materia Prima", "libras", "matera", new Date(System.currentTimeMillis()));
 		}
 		catch (Exception e) 
@@ -53,6 +55,8 @@ public class TestApp extends TestCase
 	{
 		try 
 		{
+			dao.eliminarProceso(10020, 100000);
+			dao.eliminarProducto(100000, 0);
 			dao.agregarProductoSinEliminar(100000, "TV", 10, "TV de prueba", 10, 0, 5, 5);
 			dao.agregarProcesoSinEliminacion(10020, "proce1", 10, "prueba1", 100000);
 		}
@@ -99,7 +103,10 @@ public class TestApp extends TestCase
 	{
 		try 
 		{
+			dao.eliminarMaterial(10020);
 			dao.agregarMaterialPrueba(1, 10020, "Materia Prima", "libras", "matera", new Date(1,1,1));
+			//TO_DATE('2015-02-12 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+			
 		}
 		catch (Exception e) 
 		{
@@ -111,6 +118,11 @@ public class TestApp extends TestCase
 		{
 			dao.agregarMaterialPrueba(-5, 10020, "lalalala", "libras", "litio", new Date(1,1,1));
 			fail("Creo uno que no debia");
+		}
+		catch (SQLIntegrityConstraintViolationException e) 
+		{
+			//e.printStackTrace();
+			
 		}
 		catch (Exception e) 
 		{

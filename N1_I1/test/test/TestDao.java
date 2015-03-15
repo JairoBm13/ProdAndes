@@ -141,8 +141,11 @@ public class TestDao {
 //			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
 //			  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
 			
+//			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
+//					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
+			
 			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
-					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
+					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , TO_DATE('2015-02-12 00:00:00', 'YYYY-MM-DD HH24:MI:SS') )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -151,9 +154,9 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{
@@ -189,8 +192,11 @@ public class TestDao {
 //			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
 //					  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
 			
+//			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
+//					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
+			
 			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
-					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
+					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , TO_DATE('2015-02-12 00:00:00', 'YYYY-MM-DD HH24:MI:SS') )";
 					
 					establecerConexion(cadenaConexion, usuario, clave);
 					
@@ -201,9 +207,9 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{
@@ -265,9 +271,9 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{
@@ -310,9 +316,9 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{
@@ -374,9 +380,9 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{
@@ -419,9 +425,10 @@ public class TestDao {
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getSQLState());
-			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+//			throw new Exception("ERROR = RegistroDePaquetesDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+			throw e;
 		}
 		finally 
 		{

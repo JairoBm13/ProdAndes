@@ -319,7 +319,7 @@ public class ConsultaDAO_SoloConexion {
     				adminID=admin.getInt("codigo");
     			
     			pSRequeridosNum =conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-    					+ "values (incremento_id_Pedido.NextVal,'listo',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+    					+ "values (incremento_id_Pedido.NextVal,'listo',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+",'"+loginCLiente+"' )");
     			pSRequeridosNum.executeUpdate();
     			
     		}
@@ -396,7 +396,7 @@ public class ConsultaDAO_SoloConexion {
         				adminID=admin.getInt("codigo");
         			
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,'enProduccion',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,'enProduccion',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+",'"+loginCLiente+"' )");
         			pSRequeridosNum.executeUpdate();
         			
         			
@@ -413,7 +413,7 @@ public class ConsultaDAO_SoloConexion {
         				adminID=admin.getInt("codigo");
         			
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
-        					+ "values (incremento_id_Pedido.NextVal,'enEspera',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
+        					+ "values (incremento_id_Pedido.NextVal,'enEspera',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+",'"+loginCLiente+"' )");
         			pSRequeridosNum.executeUpdate();
         			
         			
