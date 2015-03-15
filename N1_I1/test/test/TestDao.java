@@ -138,8 +138,11 @@ public class TestDao {
 
 		try 
 		{
+//			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
+//			  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
+			
 			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
-			  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
+					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -154,7 +157,7 @@ public class TestDao {
 		}
 		finally 
 		{
-			String borrar = "delete from material where codigo = '"+codigo+"'";
+			String borrar = "delete from material where codigo = "+codigo+"";
 			
 			System.out.println("st: " + borrar);
 			
@@ -183,8 +186,11 @@ public class TestDao {
 
 		try 
 		{
+//			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
+//					  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
+			
 			String cambio =  " INSERT INTO material ( cantidad , codigo , tipo, unidad, nombre, ultimoAbastecimiento) "
-					  +" Values( '"+ cantidad +"' , '"+ codigo +"'  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , '"+ ultimo +"' )";
+					  +" Values( "+ cantidad +" , "+ codigo +"  , '"+ tipo +"'  , '"+ unidad +"'  , '"+ nombre +"'  , "+ ultimo +" )";
 					
 					establecerConexion(cadenaConexion, usuario, clave);
 					
@@ -220,7 +226,7 @@ public class TestDao {
 	{
 		PreparedStatement prepStmt = null;
 		
-		String borrar = "delete from material where codigo = '"+codigo+"'";
+		String borrar = "delete from material where codigo = "+codigo+"";
 		
 		System.out.println("st: " + borrar);
 		
@@ -250,7 +256,7 @@ public class TestDao {
 		try 
 		{
 			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, estado, codigoProceso, numEtapas) "
-			  +" Values( '"+ codigo +"' , '"+ nombre +"'  , '"+ cantidad +"'  , '"+ descripcion +"'  , '"+ costo +"'  , '"+ estado +"'  , '"+ codigoProceso +"'  , '"+ numEtapas +"' )";
+			  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ estado +"  , "+ codigoProceso +"  , "+ numEtapas +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -265,7 +271,7 @@ public class TestDao {
 		}
 		finally 
 		{
-			String borrar = "delete from producto where codigo = '"+codigo+"' and estado="+estado;
+			String borrar = "delete from producto where codigo = "+codigo+" and estado="+estado;
 			
 			System.out.println("st: " + borrar);
 			
@@ -295,7 +301,7 @@ public class TestDao {
 		try 
 		{
 			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, estado, codigoProceso, numEtapas) "
-			  +" Values( '"+ codigo +"' , '"+ nombre +"'  , '"+ cantidad +"'  , '"+ descripcion +"'  , '"+ costo +"'  , '"+ estado +"'  , '"+ codigoProceso +"'  , '"+ numEtapas +"' )";
+					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ estado +"  , "+ codigoProceso +"  , "+ numEtapas +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -329,7 +335,7 @@ public class TestDao {
 	{
 		PreparedStatement prepStmt = null;
 		
-		String borrar = "delete from producto where codigo = '"+codigo+"' and estado="+estado;
+		String borrar = "delete from producto where codigo = "+codigo+" and estado="+estado;
 		
 		System.out.println("st: " + borrar);
 		
@@ -359,7 +365,7 @@ public class TestDao {
 		try 
 		{
 			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto) "
-			  +" Values( '"+ codigo +"' , '"+ nombre +"'  , '"+ tiempoEjecucion +"'  , '"+ descripcion +"'  , '"+ codigoProducto +"' )";
+			  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -374,7 +380,7 @@ public class TestDao {
 		}
 		finally 
 		{
-			String borrar = "delete from proceso where codigo = '"+codigo+" and codigoProducto="+codigoProducto;
+			String borrar = "delete from proceso where codigo = "+codigo+" and codigoProducto="+codigoProducto;
 			
 			System.out.println("st: " + borrar);
 			
@@ -404,7 +410,7 @@ public class TestDao {
 		try 
 		{
 			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto) "
-			  +" Values( '"+ codigo +"' , '"+ nombre +"'  , '"+ tiempoEjecucion +"'  , '"+ descripcion +"'  , '"+ codigoProducto +"' )";
+					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -438,7 +444,7 @@ public class TestDao {
 	{
 		PreparedStatement prepStmt = null;
 		
-		String borrar = "delete from proceso where codigo = '"+codigo+" and codigoProducto="+codigoProducto;
+		String borrar = "delete from proceso where codigo = "+codigo+" and codigoProducto="+codigoProducto;
 		
 		System.out.println("st: " + borrar);
 		

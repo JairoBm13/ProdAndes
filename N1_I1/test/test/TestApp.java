@@ -99,7 +99,7 @@ public class TestApp extends TestCase
 	{
 		try 
 		{
-			dao.agregarMaterialPrueba(1, 10020, "Materia Prima", "libras", "matera", new Date(System.currentTimeMillis()));
+			dao.agregarMaterialPrueba(1, 10020, "Materia Prima", "libras", "matera", new Date(1,1,1));
 		}
 		catch (Exception e) 
 		{
@@ -109,7 +109,7 @@ public class TestApp extends TestCase
 		
 		try 
 		{
-			dao.agregarMaterialPrueba(-5, 10020, "lalalala", "libras", "litio", new Date(System.currentTimeMillis()));
+			dao.agregarMaterialPrueba(-5, 10020, "lalalala", "libras", "litio", new Date(1,1,1));
 			fail("Creo uno que no debia");
 		}
 		catch (Exception e) 
