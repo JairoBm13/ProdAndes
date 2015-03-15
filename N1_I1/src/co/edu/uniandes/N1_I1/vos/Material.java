@@ -1,3 +1,5 @@
+
+
 package co.edu.uniandes.N1_I1.vos;
 
 import java.sql.Date;
@@ -23,6 +25,20 @@ public class Material {
 	
 	public Material()
 	{
+		requiere = new ArrayList<Requiere>();
+		
+		suministro = new ArrayList<Suministro>();
+	}
+	
+	public Material(double cantidadT, long codigoT, String tipoT, String unidadT, String nombreT, Date ultimoAbastecimientoT)
+	{
+		cantidad=cantidadT;
+		codigo=codigoT;
+		tipo=tipoT;
+		unidad=unidadT;
+		nombre=nombreT;
+		ultimoAbastecimiento=ultimoAbastecimientoT;
+		
 		requiere = new ArrayList<Requiere>();
 		
 		suministro = new ArrayList<Suministro>();
@@ -96,3 +112,4 @@ public class Material {
 	
 	
 }
+

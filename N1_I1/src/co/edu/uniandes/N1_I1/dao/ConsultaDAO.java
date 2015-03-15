@@ -501,11 +501,11 @@ public class ConsultaDAO {
 			{
 				Producto produ = new Producto();
 				String nombre = rs.getString("nombre");
-				double cantidad = rs.getDouble("cantidad");
+				int cantidad = rs.getInt("cantidad");
 
 
 				produ.setNombre(nombre);
-				produ.setCantidad(cantidad);
+				produ.setCantidadDisponible(cantidad);
 				productos.add(produ);
 
 			}
