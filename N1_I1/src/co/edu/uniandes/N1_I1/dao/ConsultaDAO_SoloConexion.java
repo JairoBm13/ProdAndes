@@ -30,14 +30,13 @@ import java.util.Properties;
 
 
 
+
 import co.edu.uniandes.N1_I1.vos.EstacionProduccion;
 import co.edu.uniandes.N1_I1.vos.EtapaProduccion;
 import co.edu.uniandes.N1_I1.vos.Material;
 import co.edu.uniandes.N1_I1.vos.Pedido;
 import co.edu.uniandes.N1_I1.vos.PedidoMaterial;
 import co.edu.uniandes.N1_I1.vos.Producto;
-import co.edu.uniandes.N1_I1.vos.VideosValue;
-
 /**
  * Clase ConsultaDAO, encargada de hacer las consultas básicas para el cliente
  */
@@ -188,58 +187,58 @@ public class ConsultaDAO_SoloConexion {
     // Métodos asociados a los casos de uso: Consulta
     // ---------------------------------------------------
     
-    /**
-     * Método que se encarga de realizar la consulta en la base de datos
-     * y retorna un ArrayList de elementos tipo VideosValue.
-     * @return ArrayList lista que contiene elementos tipo VideosValue.
-     * La lista contiene los videos ordenados alfabeticamente
-     * @throws Exception se lanza una excepción si ocurre un error en
-     * la conexión o en la consulta. 
-     */
-    public ArrayList<VideosValue> darVideosDefault() throws Exception
-    {
-    	PreparedStatement prepStmt = null;
-    	
-    	ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
-		VideosValue vidValue = new VideosValue();
-    	
-		try {
-			establecerConexion(cadenaConexion, usuario, clave);
-			prepStmt = conexion.prepareStatement(consultaVideosDefault);
-			
-			ResultSet rs = prepStmt.executeQuery();
-			
-			while(rs.next()){
-				String titVid = rs.getString(tituloVideo);
-				int anyoVid = rs.getInt(anyoVideo);
-				
-				vidValue.setTituloOriginal(titVid);
-				vidValue.setAnyo(anyoVid);	
-			
-				videos.add(vidValue);
-				vidValue = new VideosValue();
-							
-			}
-		
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(consultaVideosDefault);
-			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
-		}finally 
-		{
-			if (prepStmt != null) 
-			{
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-					
-					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
-				}
-			}
-			closeConnection(conexion);
-		}		
-		return videos;
-    }
+//    /**
+//     * Método que se encarga de realizar la consulta en la base de datos
+//     * y retorna un ArrayList de elementos tipo VideosValue.
+//     * @return ArrayList lista que contiene elementos tipo VideosValue.
+//     * La lista contiene los videos ordenados alfabeticamente
+//     * @throws Exception se lanza una excepción si ocurre un error en
+//     * la conexión o en la consulta. 
+//     */
+//    public ArrayList<VideosValue> darVideosDefault() throws Exception
+//    {
+//    	PreparedStatement prepStmt = null;
+//    	
+//    	ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
+//		VideosValue vidValue = new VideosValue();
+//    	
+//		try {
+//			establecerConexion(cadenaConexion, usuario, clave);
+//			prepStmt = conexion.prepareStatement(consultaVideosDefault);
+//			
+//			ResultSet rs = prepStmt.executeQuery();
+//			
+//			while(rs.next()){
+//				String titVid = rs.getString(tituloVideo);
+//				int anyoVid = rs.getInt(anyoVideo);
+//				
+//				vidValue.setTituloOriginal(titVid);
+//				vidValue.setAnyo(anyoVid);	
+//			
+//				videos.add(vidValue);
+//				vidValue = new VideosValue();
+//							
+//			}
+//		
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			System.out.println(consultaVideosDefault);
+//			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+//		}finally 
+//		{
+//			if (prepStmt != null) 
+//			{
+//				try {
+//					prepStmt.close();
+//				} catch (SQLException exception) {
+//					
+//					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+//				}
+//			}
+//			closeConnection(conexion);
+//		}		
+//		return videos;
+//    }
     
     public void metodo1() throws Exception{
     	//////////////////
@@ -317,7 +316,6 @@ public class ConsultaDAO_SoloConexion {
     			if(admin.next())
     				adminID=admin.getInt("codigo");
     			
-    			pSRequeridosNum.close();
     			pSRequeridosNum =conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
     					+ "values (incremento_id_Pedido.NextVal,'listo',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
     			pSRequeridosNum.executeUpdate();
@@ -336,7 +334,6 @@ public class ConsultaDAO_SoloConexion {
 						+ " and etapaProduccion.codigo=estacionProduccion.codigoEtapa and requiere.codigoEstacion=estacionProduccion.codigo) ");
     			pSRequeridosNum.executeUpdate();
     			
-    			pSRequeridosNum.close();
         		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from consulta");
 
         		
@@ -348,11 +345,9 @@ public class ConsultaDAO_SoloConexion {
         		if(rsRequeridos.next())
         			cantidadRequerido=rsRequeridos.getInt("cuenta");
         		
-        		pSRequeridosNum.close();
         		pSRequeridosNum = conexion.prepareStatement("Create View matDisp as (SELECT * FROM consulta INNER JOIN Materiales mat ON consulta.codigoMaterial= mat.codigo where consulta.cantidad*"+(cantidad-cantidadDisponible)+" <= mat.cantidad )");
         		pSRequeridosNum.executeUpdate();
         		
-        		pSRequeridosNum.close();
         		pSRequeridosNum = conexion.prepareStatement("select count(*) as cuenta from matDisp");
         		pSRequeridosNum.executeUpdate();
         		
@@ -392,14 +387,12 @@ public class ConsultaDAO_SoloConexion {
         			if(actualizar!=null)
         				actualizar.close();
         			//Codigo del admin y crea pedido
-        			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("select codigo from Administrador");
         			ResultSet admin = pSRequeridosNum.executeQuery();
         			int adminID =0;
         			if(admin.next())
         				adminID=admin.getInt("codigo");
         			
-        			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
         					+ "values (incremento_id_Pedido.NextVal,'enProduccion',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
         			pSRequeridosNum.executeUpdate();
@@ -411,14 +404,12 @@ public class ConsultaDAO_SoloConexion {
         		{
         			//Deja el pedido en pendiente
         			//Codigo del admin y crea pedido
-        			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("select codigo from Administrador");
         			ResultSet admin = pSRequeridosNum.executeQuery();
         			int adminID =0;
         			if(admin.next())
         				adminID=admin.getInt("codigo");
         			
-        			pSRequeridosNum.close();
         			pSRequeridosNum = conexion.prepareStatement("insert into Pedidos (codigo, estado,cantidad,fechaPedido, fechaEsperada,  codioProducto ,  codigoAdmin, codigoCliente)"
         					+ "values (incremento_id_Pedido.NextVal,'enEspera',"+cantidad+", NOW(),"+fechaEspera+","+idProceso+","+adminID+","+loginCLiente+" )");
         			pSRequeridosNum.executeUpdate();

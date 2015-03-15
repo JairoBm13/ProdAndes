@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.edu.uniandes.N1_I1.fachada.VideoAndes;
-import co.edu.uniandes.N1_I1.vos.VideosValue;
 
 /**
  * clase plantilla, que sirve de base para el dearrollo de
@@ -80,9 +79,9 @@ public class ServletPlantilla extends ServletTemplate
             String valor = request.getParameter( "valor" );
             
             //TODO obtener los datos a imprimir a partir de los llamados a la interfaz
-            ArrayList<VideosValue> videos= VideoAndes.darInstancia().darVideosDefault();
+//            ArrayList videos= VideoAndes.darInstancia();
             //TODO cambiar los parametros para imprimir la información deseada
-            imprimirDatos( respuesta, videos);
+//            imprimirDatos( respuesta, videos);
         }
         catch( Exception e )
         {
@@ -97,7 +96,7 @@ public class ServletPlantilla extends ServletTemplate
      * @param respuesta Respuesta al cliente
      * @param estudiantes Estudiantes a imprimir
      */
-    private void imprimirDatos( PrintWriter respuesta, ArrayList<VideosValue> videos)
+    private void imprimirDatos( PrintWriter respuesta, ArrayList videos)
     {
     	//imprimir que no se encontró información
         if( videos.size( ) == 0 )
@@ -125,15 +124,15 @@ public class ServletPlantilla extends ServletTemplate
             // Imprime los resultados
             for( int i = 0; i < videos.size( ); i++ )
             {
-                VideosValue video = videos.get( i );
+//                VideosValue video = videos.get( i );
                 respuesta.println( "                          <tr>" );
-                respuesta.println( "                              <td width=\"71\" align=\"center\">" + video.getTituloOriginal() + "</td>" );
-                respuesta.println( "                              <td width=\"71\" align=\"center\">" + video.getAnyo() + "</td>" );
-                respuesta.println( "                          </tr>" );
+//                respuesta.println( "                              <td width=\"71\" align=\"center\">" + video.getTituloOriginal() + "</td>" );
+//                respuesta.println( "                              <td width=\"71\" align=\"center\">" + video.getAnyo() + "</td>" );
+//                respuesta.println( "                          </tr>" );
             }
-            //
-            // Imprime el final de la tabla
-            respuesta.println( "                      </table>" );
+//            //
+//            // Imprime el final de la tabla
+//            respuesta.println( "                      </table>" );
         }
     }
 }

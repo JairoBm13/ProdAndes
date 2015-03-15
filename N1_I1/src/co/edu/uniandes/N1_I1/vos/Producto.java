@@ -8,9 +8,12 @@ public class Producto {
 	
 	private String nombre;
 	
+
 	private int cantidadDisponible;
 	
 	private int cantidadEnProduccion;
+
+
 	
 	private String descripcion;
 	
@@ -60,12 +63,16 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
+
 	public int getCantidadDisponible() {
 		return cantidadDisponible;
+
 	}
+
 
 	public void setCantidadDisponible(int cantidad) {
 		this.cantidadDisponible = cantidad;
+
 	}
 
 	public String getDescripcion() {

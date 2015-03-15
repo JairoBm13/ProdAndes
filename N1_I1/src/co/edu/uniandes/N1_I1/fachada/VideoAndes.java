@@ -13,7 +13,6 @@ package co.edu.uniandes.N1_I1.fachada;
 import java.util.ArrayList;
 
 import co.edu.uniandes.N1_I1.dao.ConsultaDAO;
-import co.edu.uniandes.N1_I1.vos.VideosValue;
 
 /**
  * Clase VideoAndes, que representa la fachada de comunicación entre
@@ -74,15 +73,15 @@ public class VideoAndes
     // Métodos asociados a los casos de uso: Consulta
     // ---------------------------------------------------
     
-	/**
-	 * método que retorna los videos en orden alfabético.
-	 * invoca al DAO para obtener los resultados.
-	 * @return ArrayList lista con los videos ordenados alfabeticamente.
-	 * @throws Exception pasa la excepción generada por el DAO
-	 */
-	public ArrayList<VideosValue> darVideosDefault() throws Exception
-	{
-	    return dao.darVideosDefault();
-	}
+//	/**
+//	 * método que retorna los videos en orden alfabético.
+//	 * invoca al DAO para obtener los resultados.
+//	 * @return ArrayList lista con los videos ordenados alfabeticamente.
+//	 * @throws Exception pasa la excepción generada por el DAO
+//	 */
+//	public ArrayList<VideosValue> darVideosDefault() throws Exception
+//	{
+//	    return dao.darVideosDefault();
+//	}
 	
 }

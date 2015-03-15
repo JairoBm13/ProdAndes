@@ -14,14 +14,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
-
-
-
-
-
-import co.edu.uniandes.N1_I1.vos.VideosValue;
-
+import co.edu.uniandes.N1_I1.vos.Material;
+import co.edu.uniandes.N1_I1.vos.Producto;
 /**
  * Clase ConsultaDAO, encargada de hacer las consultas básicas para el cliente
  */
@@ -165,59 +161,6 @@ public class ConsultaDAO {
 	// Métodos asociados a los casos de uso: Consulta
 	// ---------------------------------------------------
 
-	/**
-	 * Método que se encarga de realizar la consulta en la base de datos
-	 * y retorna un ArrayList de elementos tipo VideosValue.
-	 * @return ArrayList lista que contiene elementos tipo VideosValue.
-	 * La lista contiene los videos ordenados alfabeticamente
-	 * @throws Exception se lanza una excepción si ocurre un error en
-	 * la conexión o en la consulta. 
-	 */
-	public ArrayList<VideosValue> darVideosDefault() throws Exception
-	{
-		PreparedStatement prepStmt = null;
-
-		ArrayList<VideosValue> videos = new ArrayList<VideosValue>();
-		VideosValue vidValue = new VideosValue();
-
-		try {
-			establecerConexion(cadenaConexion, usuario, clave);
-			prepStmt = conexion.prepareStatement(consultaVideosDefault);
-
-			ResultSet rs = prepStmt.executeQuery();
-
-			while(rs.next()){
-				String titVid = rs.getString(tituloVideo);
-				int anyoVid = rs.getInt(anyoVideo);
-
-				vidValue.setTituloOriginal(titVid);
-				vidValue.setAnyo(anyoVid);	
-
-				videos.add(vidValue);
-				vidValue = new VideosValue();
-
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(consultaVideosDefault);
-			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
-		}finally 
-		{
-			if (prepStmt != null) 
-			{
-				try {
-					prepStmt.close();
-				} catch (SQLException exception) {
-
-					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
-				}
-			}
-			closeConnection(conexion);
-		}		
-		return videos;
-	}
-
 	//FIXME
 	/**
 	 * 
@@ -232,11 +175,11 @@ public class ConsultaDAO {
 			String selectQuery = "select cantidad from producto where estado="+etapa+"codigo="+codigo+";";
 			establecerConexion(cadenaConexion, usuario, clave);
 			statement = conexion.prepareStatement(selectQuery);
-			
+
 			ResultSet rs = statement.executeQuery();
 			int cantidad;
 			rs.next();
-				cantidad = rs.getInt("cantidad");
+			cantidad = rs.getInt("cantidad");
 			String updateIncQuery = "update producto set cantidad=cantidad+"+cantidad+" where codigo="+codigo+" estado="+etapa+1+";";
 			statement = conexion.prepareStatement(updateIncQuery);
 			statement.executeUpdate();
@@ -246,7 +189,6 @@ public class ConsultaDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println(consultaVideosDefault);
 			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
 		}finally 
 		{
@@ -262,7 +204,7 @@ public class ConsultaDAO {
 			closeConnection(conexion);
 		}
 	}
-	
+
 	//TODO
 	/**
 	 * 
@@ -275,13 +217,12 @@ public class ConsultaDAO {
 
 		try {
 			establecerConexion(cadenaConexion, usuario, clave);
-			
+
 			String updateDecQuery = "update producto set cantidad=cantidad+"+cantidad+" where codigo="+codigo+";";
 			statement = conexion.prepareStatement(updateDecQuery);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println(consultaVideosDefault);
 			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
 		}finally 
 		{
@@ -297,15 +238,253 @@ public class ConsultaDAO {
 			closeConnection(conexion);
 		}
 	}
-	
-	public ArrayList consultarExistenciaDe(String tipo){
+
+	public ArrayList consultarExistenciaDe(String tipo, String inventario, String etapa, String fechaEntrega, String fechaSolicitud, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception{
 		ArrayList resultado = new ArrayList();
 		if(tipo.equals("Producto")){
-			
+			resultado = consultarExistenciasDeProducto(inventario, etapa, fechaEntrega, fechaSolicitud, ordenes, grupos);
 		}
-		else if(tipo.equals("Material")){
-			
+		else if(tipo.equals("Materia Prima")){
+			resultado = consultarExistenciasDeMateriaPrima(tipo, inventario, ordenes, grupos);
+		}
+		else if(tipo.equals("Componente")){
+			resultado = consultarExistenciasDeComponente(tipo, inventario, ordenes, grupos);
 		}
 		return resultado;
+	}
+
+	private ArrayList<Material> consultarExistenciasDeMateriaPrima(String tipo, String inventario, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
+		PreparedStatement statement= null;
+
+		ArrayList<Material> materiales = new ArrayList<Material>();
+
+		String selectingQuery = "Select cantidad, nombre, unidad from Materiales where tipo='"+tipo+"' ";
+		if(inventario != null){selectingQuery += "AND cantidad between ";
+		String[] inven = inventario.split("-");
+		selectingQuery += inven[0] + " AND " + inven[1];
+		}
+		Iterator<String> iteraGrupos = ordenes.iterator();
+		String agrupamiento = "";
+		while(iteraGrupos.hasNext()){
+			String grupo = iteraGrupos.next();
+			if (iteraGrupos.hasNext()) {
+				agrupamiento += grupo + ", ";
+			}
+			else{
+				agrupamiento += grupo;
+			}
+		}
+		if(!agrupamiento.isEmpty()){
+			selectingQuery += "group by "+agrupamiento;
+		}
+		Iterator<String> iteraOrdenes= ordenes.iterator();
+		String ordenamiento = "";
+		while(iteraOrdenes.hasNext()){
+			String orden = iteraOrdenes.next();
+			if (iteraOrdenes.hasNext()) {
+				agrupamiento += orden + ",";
+			}
+			else{
+				agrupamiento += orden;
+			}
+		}
+		if(!ordenamiento.isEmpty()){
+			selectingQuery += "order by "+ordenamiento;
+		}
+
+		try {
+			establecerConexion(cadenaConexion, usuario, clave);
+			statement = conexion.prepareStatement(selectingQuery);
+
+			ResultSet rs = statement.executeQuery();
+
+			while(rs.next())
+			{
+				Material mate = new Material();
+				String nombre = rs.getString("nombre");
+				double cantidad = rs.getDouble("cantidad");
+				String unidad = rs.getString("unidad");
+
+
+				mate.setNombre(nombre);
+				mate.setCantidad(cantidad);
+				mate.setUnidad(unidad);
+				materiales.add(mate);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null) 
+			{
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}		
+		return materiales;
+	}
+
+	private ArrayList<Material> consultarExistenciasDeComponente(String tipo, String inventario, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
+		PreparedStatement statement= null;
+
+		ArrayList<Material> materiales = new ArrayList<Material>();
+
+		String selectingQuery = "Select cantidad, nombre, unidad from Materiales where tipo='"+tipo+"' ";
+		Iterator<String> iteraGrupos = ordenes.iterator();
+		String agrupamiento = "";
+
+		if(inventario != null){selectingQuery += "AND cantidad between ";
+		String[] inven = inventario.split("-");
+		selectingQuery += inven[0] + " AND " + inven[1];
+		}
+		while(iteraGrupos.hasNext()){
+			String grupo = iteraGrupos.next();
+			if (iteraGrupos.hasNext()) {
+				agrupamiento += grupo + ", ";
+			}
+			else{
+				agrupamiento += grupo;
+			}
+		}
+		if(!agrupamiento.isEmpty()){
+			selectingQuery += "group by "+agrupamiento;
+		}
+		Iterator<String> iteraOrdenes= ordenes.iterator();
+		String ordenamiento = "";
+		while(iteraOrdenes.hasNext()){
+			String orden = iteraOrdenes.next();
+			if (iteraOrdenes.hasNext()) {
+				agrupamiento += orden + ",";
+			}
+			else{
+				agrupamiento += orden;
+			}
+		}
+		if(!ordenamiento.isEmpty()){
+			selectingQuery += "order by "+ordenamiento;
+		}
+
+		try {
+			establecerConexion(cadenaConexion, usuario, clave);
+			statement = conexion.prepareStatement(selectingQuery);
+
+			ResultSet rs = statement.executeQuery();
+
+			while(rs.next())
+			{
+				Material mate = new Material();
+				String nombre = rs.getString("nombre");
+				double cantidad = rs.getDouble("cantidad");
+
+
+				mate.setNombre(nombre);
+				mate.setCantidad(cantidad);
+				materiales.add(mate);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null) 
+			{
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}		
+		return materiales;
+	}
+
+	private ArrayList<Producto> consultarExistenciasDeProducto(String inventario, String etapa, String fechaEntrega, String fechaSolicitud, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
+		PreparedStatement statement = null;
+		ArrayList<Producto> productos = new ArrayList<Producto>();
+		String selectingQuery = "Select cantidad, nombre from PRODUCTO";
+		Iterator<String> iteraGrupos = ordenes.iterator();
+		String agrupamiento = "";
+		if(inventario != null){selectingQuery += "AND cantidad between ";
+		String[] inven = inventario.split("-");
+		selectingQuery += inven[0] + " AND " + inven[1];
+		}
+		if(etapa != null){selectingQuery += "AND etapa='"+etapa+"'";}
+		if(fechaEntrega != null){selectingQuery += "AND fechaEntrega='"+fechaEntrega+"'";}
+		if(fechaSolicitud != null){selectingQuery += "AND fechaSolicitud='"+fechaSolicitud+"'";}
+		while(iteraGrupos.hasNext()){
+			String grupo = iteraGrupos.next();
+			if (iteraGrupos.hasNext()) {
+				agrupamiento += grupo + ", ";
+			}
+			else{
+				agrupamiento += grupo;
+			}
+		}
+		if(!agrupamiento.isEmpty()){
+			selectingQuery += "group by "+agrupamiento;
+		}
+		Iterator<String> iteraOrdenes= ordenes.iterator();
+		String ordenamiento = "";
+		while(iteraOrdenes.hasNext()){
+			String orden = iteraOrdenes.next();
+			if (iteraOrdenes.hasNext()) {
+				agrupamiento += orden + ",";
+			}
+			else{
+				agrupamiento += orden;
+			}
+		}
+		if(!ordenamiento.isEmpty()){
+			selectingQuery += "order by "+ordenamiento;
+		}
+		
+		try {
+			establecerConexion(cadenaConexion, usuario, clave);
+			statement = conexion.prepareStatement(selectingQuery);
+
+			ResultSet rs = statement.executeQuery();
+
+			while(rs.next())
+			{
+				Producto produ = new Producto();
+				String nombre = rs.getString("nombre");
+				int cantidad = rs.getInt("cantidad");
+
+
+				produ.setNombre(nombre);
+				produ.setCantidadDisponible(cantidad);
+				productos.add(produ);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null) 
+			{
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}
+		return productos;
 	}
 }
