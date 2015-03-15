@@ -239,6 +239,18 @@ public class ConsultaDAO {
 		}
 	}
 
+	/**
+	 * 
+	 * @param tipo
+	 * @param inventario
+	 * @param etapa
+	 * @param fechaEntrega
+	 * @param fechaSolicitud
+	 * @param ordenes
+	 * @param grupos
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList consultarExistenciaDe(String tipo, String inventario, String etapa, String fechaEntrega, String fechaSolicitud, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception{
 		ArrayList resultado = new ArrayList();
 		if(tipo.equals("Producto")){
@@ -253,6 +265,15 @@ public class ConsultaDAO {
 		return resultado;
 	}
 
+	/**
+	 * 
+	 * @param tipo
+	 * @param inventario
+	 * @param ordenes
+	 * @param grupos
+	 * @return
+	 * @throws Exception
+	 */
 	private ArrayList<Material> consultarExistenciasDeMateriaPrima(String tipo, String inventario, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
 		PreparedStatement statement= null;
 
@@ -332,6 +353,15 @@ public class ConsultaDAO {
 		return materiales;
 	}
 
+	/**
+	 * 
+	 * @param tipo
+	 * @param inventario
+	 * @param ordenes
+	 * @param grupos
+	 * @return
+	 * @throws Exception
+	 */
 	private ArrayList<Material> consultarExistenciasDeComponente(String tipo, String inventario, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
 		PreparedStatement statement= null;
 
@@ -410,6 +440,17 @@ public class ConsultaDAO {
 		return materiales;
 	}
 
+	/**
+	 * 
+	 * @param inventario
+	 * @param etapa
+	 * @param fechaEntrega
+	 * @param fechaSolicitud
+	 * @param ordenes
+	 * @param grupos
+	 * @return
+	 * @throws Exception
+	 */
 	private ArrayList<Producto> consultarExistenciasDeProducto(String inventario, String etapa, String fechaEntrega, String fechaSolicitud, ArrayList<String> ordenes, ArrayList<String> grupos) throws Exception {
 		PreparedStatement statement = null;
 		ArrayList<Producto> productos = new ArrayList<Producto>();
@@ -486,5 +527,46 @@ public class ConsultaDAO {
 			closeConnection(conexion);
 		}
 		return productos;
+	}
+	
+	/**
+	 * 
+	 * @param pedido
+	 * @throws Exception
+	 */
+	public void registrarEntregaPedido(String pedido) throws Exception{
+		PreparedStatement statement = null;		
+
+		try {
+			establecerConexion(cadenaConexion, usuario, clave);
+			
+			String selectQuery = "select codigoProducto from PEDIDO where codigo="+pedido+";";
+			statement = conexion.prepareStatement(selectQuery);
+			ResultSet rs = statement.executeQuery();
+			double producto = 0;
+			if(rs.next()){
+				producto = rs.getDouble("codigoProducto");
+			}
+			String updateQueryPedi = "update pedido set estado='Finalizado' where estado='Listo' and codigo="+pedido+";";
+			statement = conexion.prepareStatement(updateQueryPedi);
+			statement.executeUpdate();
+			String updateQueryProd = "update producto set cantidad=0 where estado=0 and codigoProducto="+producto+";";
+			statement = conexion.prepareStatement(updateQueryProd);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+		}finally 
+		{
+			if (statement != null){
+				try {
+					statement.close();
+				} catch (SQLException exception) {
+
+					throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+				}
+			}
+			closeConnection(conexion);
+		}
 	}
 }
