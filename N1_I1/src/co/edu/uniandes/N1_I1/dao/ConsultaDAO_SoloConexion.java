@@ -33,6 +33,7 @@ import java.util.Properties;
 
 
 
+
 import co.edu.uniandes.N1_I1.vos.EstacionProduccion;
 import co.edu.uniandes.N1_I1.vos.EtapaProduccion;
 import co.edu.uniandes.N1_I1.vos.Material;
@@ -68,11 +69,15 @@ public class ConsultaDAO_SoloConexion {
 	 */
 	private static final String anyoVideo = "anyo";
 	
-	private static final String CONSULTA_PRODUCTO = "Producto";
+	public static final String CONSULTA_PRODUCTO = "Producto";
 	
-	private static final String CONSULTA_MATERIAL = "Material";
+	public static final String CONSULTA_MATERIAL = "Material";
 	
-	private static final String CONSULTA_ETAPA_PROD = "Etapa Produccion";
+	public static final String CONSULTA_ETAPA_PROD = "Etapa Produccion";
+	
+	public static final String TIPO_MATERIAL_MATERIA_PRIMA = "Materia Prima";
+	
+	public static final String TIPO_MATERIAL_COMPONENTE = "Componente";
 	
 
 	//----------------------------------------------------
@@ -703,6 +708,105 @@ public class ConsultaDAO_SoloConexion {
     	}	
     	return new Object[]{material,etapasProduc,productos,pedidosMaterial};
     }
+    
+    public ArrayList<Material> darTodosMaterialesCodigoNombreTipo() throws Exception
+    {
+    	PreparedStatement prepStmt = null;
+    	ArrayList<Material> resp = new ArrayList<Material>();
+    	
+    	try {
+    		establecerConexion(cadenaConexion, usuario, clave);
+    		
+    		String sentencia = "SELECT codigo, nombre, tipo from Material order by tipo";
+    		
+    		
+    		prepStmt = conexion.prepareStatement(sentencia);
+    		
+    		ResultSet rsMaterial = prepStmt.executeQuery();
+    		
+    		
+    		while(rsMaterial.next())
+    		{
+    			Material material = new Material();
+    			material.setCodigo(rsMaterial.getLong("codigo"));
+    			material.setNombre(rsMaterial.getString("nombre"));
+    			material.setTipo(rsMaterial.getString("tipo"));
+    			
+    			resp.add(material);
+    		}
+    		
+
+    		
+
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		System.out.println("metodo1");
+    		throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+    	}finally 
+    	{
+    		if (prepStmt != null) 
+    		{
+    			try {
+    				prepStmt.close();
+    			} catch (SQLException exception) {
+
+    				throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+    			}
+    		}
+    		closeConnection(conexion);
+    	}
+    	return resp;
+    }
+    
+    
+    public ArrayList<Producto> darTodosProductosCodigoNombre() throws Exception
+    {
+    	PreparedStatement prepStmt = null;
+    	ArrayList<Producto> resp = new ArrayList<Producto>();
+    	
+    	try {
+    		establecerConexion(cadenaConexion, usuario, clave);
+    		
+    		String sentencia = "SELECT codigo, nombre from Producto where etapa=0";
+    		
+    		
+    		prepStmt = conexion.prepareStatement(sentencia);
+    		
+    		ResultSet rsProducto = prepStmt.executeQuery();
+    		
+    		
+    		while(rsProducto.next())
+    		{
+    			Producto producto = new Producto();
+    			producto.setCodigo(rsProducto.getLong("codigo"));
+    			producto.setNombre(rsProducto.getString("nombre"));
+    			
+    			resp.add(producto);
+    		}
+    		
+
+    		
+
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		System.out.println("metodo1");
+    		throw new Exception("ERROR = ConsultaDAO: loadRowsBy(..) Agregando parametros y executando el statement!!!");
+    	}finally 
+    	{
+    		if (prepStmt != null) 
+    		{
+    			try {
+    				prepStmt.close();
+    			} catch (SQLException exception) {
+
+    				throw new Exception("ERROR: ConsultaDAO: loadRow() =  cerrando una conexión.");
+    			}
+    		}
+    		closeConnection(conexion);
+    	}
+    	return resp;
+    }
+    
     
     
     public static void main(String[] args) {

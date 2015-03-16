@@ -78,6 +78,7 @@ public class TestApp extends TestCase
 		try 
 		{
 			dao.eliminarProducto(100000, 0);
+			//dao.eliminarProceso(10020, 100000);
 			fail("Elimino un producto que no debia");
 		}
 		catch (Exception e) 
