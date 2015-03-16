@@ -6,9 +6,11 @@ public class Cliente extends Usuario
 {
 	private long idLegal;
 	
+	private long codigo; 
+	
 	private String nombreLegal;
 	
-	private long resgistroSINV;
+	private String resgistroSINV;
 	
 	private long tipoIdLegal;
 	
@@ -35,11 +37,11 @@ public class Cliente extends Usuario
 		this.nombreLegal = nombreLegal;
 	}
 
-	public long getResgistroSINV() {
+	public String getResgistroSINV() {
 		return resgistroSINV;
 	}
 
-	public void setResgistroSINV(long resgistroSINV) {
+	public void setResgistroSINV(String resgistroSINV) {
 		this.resgistroSINV = resgistroSINV;
 	}
 
@@ -57,6 +59,20 @@ public class Cliente extends Usuario
 
 	public void setPedidos(ArrayList<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	/**
+	 * @return the codigo
+	 */
+	public long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo the codigo to set
+	 */
+	public void setCodigo(long codigo) {
+		this.codigo = codigo;
 	}
 	
 	

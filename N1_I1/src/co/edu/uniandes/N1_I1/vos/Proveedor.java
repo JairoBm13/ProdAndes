@@ -6,7 +6,7 @@ public class Proveedor extends Usuario
 {
 	private long codigo;
 	
-	private String tipoIdLegal;
+	private int tipoIdLegal;
 	
 	private long identificacion;
 	
@@ -28,11 +28,11 @@ public class Proveedor extends Usuario
 		this.codigo = codigo;
 	}
 
-	public String getTipoIdLegal() {
+	public int getTipoIdLegal() {
 		return tipoIdLegal;
 	}
 
-	public void setTipoIdLegal(String tipoIdLegal) {
+	public void setTipoIdLegal(int tipoIdLegal) {
 		this.tipoIdLegal = tipoIdLegal;
 	}
 
