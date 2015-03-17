@@ -10,8 +10,16 @@
     <servlet-name>ServletPlantilla</servlet-name>
     <servlet-class>co.edu.uniandes.N1_I1.servlets.ServletPlantilla</servlet-class>
   </servlet>
+  
+    <servlet>
+    <description></description>
+    <display-name>ServletConsultaGeneral</display-name>
+    <servlet-name>ServletConsultaGeneral</servlet-name>
+    <servlet-class>co.edu.uniandes.N1_I1.servlets.ServletConsultasGenerales</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
-    <servlet-name>ServletPlantilla</servlet-name>
-    <url-pattern>/plantilla.html</url-pattern>
+    <servlet-name>ServletConsultaGeneral</servlet-name>
+    <url-pattern>/consultaGeneral.html</url-pattern>
   </servlet-mapping>
 </web-app>
