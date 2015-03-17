@@ -255,14 +255,14 @@ public class TestDao {
 		
 	}
 	
-	public void agregarProductoPrueba(long codigo, String nombre, int cantidad, String descripcion, double costo, int estado, long codigoProceso, int numEtapas) throws Exception
+	public void agregarProductoPrueba(long codigo, String nombre, int cantidad, String descripcion, double costo, int numEtapas) throws Exception
 	{
 		PreparedStatement prepStmt = null;
 
 		try 
 		{
-			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, estado, codigoProceso, numEtapas) "
-			  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ estado +"  , "+ codigoProceso +"  , "+ numEtapas +" )";
+			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, numEtapas) "
+					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ numEtapas +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -277,7 +277,7 @@ public class TestDao {
 		}
 		finally 
 		{
-			String borrar = "delete from producto where codigo = "+codigo+" and estado="+estado;
+			String borrar = "delete from producto where codigo = "+codigo;
 			
 			System.out.println("st: " + borrar);
 			
@@ -300,14 +300,14 @@ public class TestDao {
 		}
 	}
 	
-	public void agregarProductoSinEliminar(long codigo, String nombre, int cantidad, String descripcion, double costo, int estado, long codigoProceso, int numEtapas) throws Exception
+	public void agregarProductoSinEliminar(long codigo, String nombre, int cantidad, String descripcion, double costo,  int numEtapas) throws Exception
 	{
 		PreparedStatement prepStmt = null;
 
 		try 
 		{
-			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, estado, codigoProceso, numEtapas) "
-					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ estado +"  , "+ codigoProceso +"  , "+ numEtapas +" )";
+			String cambio =  " INSERT INTO producto ( codigo , nombre , cantidad, descripcion, costo, numEtapas) "
+					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ cantidad +"  , '"+ descripcion +"'  , "+ costo +"  , "+ numEtapas +" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -337,11 +337,11 @@ public class TestDao {
 		}
 	}
 	
-	public void eliminarProducto(long codigo, int estado) throws Exception
+	public void eliminarProducto(long codigo) throws Exception
 	{
 		PreparedStatement prepStmt = null;
 		
-		String borrar = "delete from producto where codigo = "+codigo+" and estado="+estado;
+		String borrar = "delete from producto where codigo = "+codigo;
 		
 		System.out.println("st: " + borrar);
 		
@@ -364,14 +364,14 @@ public class TestDao {
 		
 	}
 	
-	public void agregarProcesoPrueba(long codigo, String nombre, long tiempoEjecucion, String descripcion, long codigoProducto) throws Exception
+	public void agregarProcesoPrueba(long codigo, String nombre, long tiempoEjecucion, String descripcion, long codigoProducto,int estado) throws Exception
 	{
 		PreparedStatement prepStmt = null;
 
 		try 
 		{
-			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto) "
-			  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +" )";
+			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto,estado) "
+			  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +","+estado+" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);
@@ -409,14 +409,14 @@ public class TestDao {
 		}
 	}
 	
-	public void agregarProcesoSinEliminacion(long codigo, String nombre, long tiempoEjecucion, String descripcion, long codigoProducto) throws Exception
+	public void agregarProcesoSinEliminacion(long codigo, String nombre, long tiempoEjecucion, String descripcion, long codigoProducto, int estado) throws Exception
 	{
 		PreparedStatement prepStmt = null;
 
 		try 
 		{
-			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto) "
-					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +" )";
+			String cambio =  " INSERT INTO proceso ( codigo , nombre , tiempoEjecucion, descripcion, codigoProducto,estado) "
+					  +" Values( "+ codigo +" , '"+ nombre +"'  , "+ tiempoEjecucion +"  , '"+ descripcion +"'  , "+ codigoProducto +","+estado+" )";
 			
 			establecerConexion(cadenaConexion, usuario, clave);
 			prepStmt = conexion.prepareStatement(cambio);

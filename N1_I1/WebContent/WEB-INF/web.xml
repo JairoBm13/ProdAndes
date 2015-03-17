@@ -18,8 +18,33 @@
     <servlet-class>co.edu.uniandes.N1_I1.servlets.ServletConsultasGenerales</servlet-class>
   </servlet>
   
+     <servlet>
+    <description></description>
+    <display-name>ServletUsuario</display-name>
+    <servlet-name>ServletUsuario</servlet-name>
+    <servlet-class>co.edu.uniandes.N1_I1.servlets.ServletUsuario</servlet-class>
+  </servlet>
+  
+     <servlet>
+    <description></description>
+    <display-name>CopyOfConsultasGenerales2</display-name>
+    <servlet-name>CopyOfConsultasGenerales2</servlet-name>
+    <servlet-class>co.edu.uniandes.N1_I1.servlets.CopyOfConsultasGenerales2</servlet-class>
+  </servlet>
+    
   <servlet-mapping>
     <servlet-name>ServletConsultaGeneral</servlet-name>
     <url-pattern>/consultaGeneral.html</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletUsuario</servlet-name>
+    <url-pattern>/prueba.html</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet-mapping>
+    <servlet-name>CopyOfConsultasGenerales2</servlet-name>
+    <url-pattern>/prueba2.html</url-pattern>
   </servlet-mapping>
 </web-app>

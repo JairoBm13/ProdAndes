@@ -56,9 +56,9 @@ public class TestApp extends TestCase
 		try 
 		{
 			dao.eliminarProceso(10020, 100000);
-			dao.eliminarProducto(100000, 0);
-			dao.agregarProductoSinEliminar(100000, "TV", 10, "TV de prueba", 10, 0, 5, 5);
-			dao.agregarProcesoSinEliminacion(10020, "proce1", 10, "prueba1", 100000);
+			dao.eliminarProducto(100000);
+			dao.agregarProductoSinEliminar(100000, "TV", 10, "TV de prueba", 10,  5);
+			dao.agregarProcesoSinEliminacion(10020, "proce1", 10, "prueba1", 100000,0);
 		}
 		catch (Exception e) 
 		{
@@ -67,7 +67,7 @@ public class TestApp extends TestCase
 		}
 		try 
 		{
-			//dao.agregarProcesoSinEliminacion(10022, "proce1", 10, "prueba1", 150000);
+			dao.agregarProcesoSinEliminacion(10022, "proce1", 10, "prueba1", 150000,0);
 			//fail("No debio crear este");
 		}
 		catch (Exception e) 
@@ -77,7 +77,7 @@ public class TestApp extends TestCase
 		}
 		try 
 		{
-			//dao.eliminarProducto(100000, 0);
+			dao.eliminarProducto(100000);
 			//dao.eliminarProceso(10020, 100000);
 			//fail("Elimino un producto que no debia");
 		}
@@ -89,7 +89,7 @@ public class TestApp extends TestCase
 		try 
 		{
 			dao.eliminarProceso(10020, 100000);
-			dao.eliminarProducto(100000, 0);
+			dao.eliminarProducto(100000);
 			
 		}
 		catch (Exception e) 

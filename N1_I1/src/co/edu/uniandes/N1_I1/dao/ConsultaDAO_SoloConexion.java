@@ -51,7 +51,9 @@ public class ConsultaDAO_SoloConexion {
 	/**
 	 * ruta donde se encuentra el archivo de conexión.
 	 */
-	private static final String ARCHIVO_CONEXION = "WebContent/conexion.properties";
+//	private static final String ARCHIVO_CONEXION = "WebContent/conexion.properties";
+//	private static final String ARCHIVO_CONEXION = "/../WebContent/conexion.properties";
+	private static final String ARCHIVO_CONEXION = "/conexion.properties";
 	
 	/**
 	 * nombre de la tabla videos
@@ -135,18 +137,23 @@ public class ConsultaDAO_SoloConexion {
 	{
 		try
 		{
-			File arch= new File(ARCHIVO_CONEXION);
-			Properties prop = new Properties();
-			FileInputStream in = new FileInputStream( arch );
+//			File arch= new File(ARCHIVO_CONEXION);
+//			Properties prop = new Properties();
+//			FileInputStream in = new FileInputStream( arch );
+//
+//	        prop.load( in );
+//	        in.close( );
+//
+//			cadenaConexion = prop.getProperty("url");	// El url, el usuario y passwd deben estar en un archivo de propiedades.
+//												// url: "jdbc:oracle:thin:@chie.uniandes.edu.co:1521:chie10";
+//			usuario = prop.getProperty("usuario");	// "s2501aXX";
+//			clave = prop.getProperty("clave");	// "c2501XX";
+	        cadenaConexion = "jdbc:oracle:thin:@prod.oracle.virtual.uniandes.edu.co:1531:prod";
 
-	        prop.load( in );
-	        in.close( );
-
-			cadenaConexion = prop.getProperty("url");	// El url, el usuario y passwd deben estar en un archivo de propiedades.
-												// url: "jdbc:oracle:thin:@chie.uniandes.edu.co:1521:chie10";
-			usuario = prop.getProperty("usuario");	// "s2501aXX";
-			clave = prop.getProperty("clave");	// "c2501XX";
-			final String driver = prop.getProperty("driver");
+	        usuario = "ISIS2304051510";
+	        clave = "dmariafifth";
+//			final String driver = prop.getProperty("driver");
+	        final String driver = "oracle.jdbc.driver.OracleDriver";
 			Class.forName(driver);
 		
 		}
@@ -172,7 +179,8 @@ public class ConsultaDAO_SoloConexion {
         }
         catch( SQLException exception )
         {
-            throw new SQLException( "ERROR: ConsultaDAO obteniendo una conexi—n." );
+            //throw new SQLException( "ERROR: ConsultaDAO obteniendo una conexi—n." );
+        	throw exception;
         }
     }
     
@@ -253,7 +261,7 @@ public class ConsultaDAO_SoloConexion {
 
     	try {
     		establecerConexion(cadenaConexion, usuario, clave);
-    		prepStmt = conexion.prepareStatement("SELECT * USUARIO");
+    		prepStmt = conexion.prepareStatement("SELECT * FROM USUARIO");
 
     		ResultSet rs = prepStmt.executeQuery();
 
@@ -814,6 +822,7 @@ public class ConsultaDAO_SoloConexion {
     	c.inicializar();
     	try {
 			c.metodo1();
+			c.darTodosMaterialesCodigoNombreTipo();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
